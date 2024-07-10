@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currículo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+</head>
+<body>
+    <style type="text/css">
+        body {
+    font-family: Arial, sans-serif;
+    font-size: 10pt; /* Adjust the base font size */
+}
+
+h1 {
+    font-size: 18px; /* Adjust the font size for headers */
+}
+    </style>
+    <button id="save-pdf">Save as PDF</button>
+
+    <script>
+        document.getElementById('save-pdf').addEventListener('click', () => {
+            const element = document.body;
+            const opt = {
+                margin:       0,
+                filename:     '{{ "resume_en.pdf" if idioma == "en" else "curriculo_pt.pdf" }}',
+                image:        { type: 'jpeg', quality: 1 },
+                html2canvas:  { scale: 2},
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            document.getElementById('save-pdf').classList.add('no-print');
+            // New Promise-based usage:
+            html2pdf().from(element).set(opt).save().then(() => {
+                // Remove the 'no-print' class after the PDF is generated
+                document.getElementById('save-pdf').classList.remove('no-print');
+            });
+        });
+    </script>
+    <div class="container">
+        <div class="header">
+            <h1>{{ user_data.nome.valor }}</h1>
+            <h2>{{ user_data.título.valor }}</h2>
+            <h3>{{ user_data.cidade.valor }}, {{ user_data.uf.valor }}</h3> 
+            <h3>{{ user_data.telefone.rotulo }}: {{ user_data.telefone.valor }}, {{ user_data.email.rotulo }}: {{ user_data.email.valor }}</h3> 
+            <h3>{{ user_data.linkedin.rotulo }}: <a href="{{ user_data.linkedin.valor }}" target="_blank">{{ user_data.linkedin.valor }}</a></h3>
+        </div>
+        <div class="section"> 
+        </div>
+        <div class="section">
+            <h2>{{secoes.formacao}}</h2>
+            {% for formacao in formacoes %}
+            {% if formacao.tipo == 'principal' %}
+            <div class="item">
+                <div style="display: flex; justify-content: space-between;">
+                    <h3 class="item" style="margin: 0;"><b>{{ formacao.curso }}</b></h3>
+                    <span style="margin: 0;">{{ formacao.duracao }}</span>
+                </div>
+                <h3 class="item"><i>{{ formacao.instituicao }}</i></h3>     
+                <p>{{ formacao.descricao }}</p>
+            </div>
+            {% endif %} 
+            {% endfor %}  
+        </div>
+        <div class="section">
+            <h2>{{secoes.experiencias}}</h2>
+            {% for experiencia in experiencias %}
+            {% if experiencia.tipo == 'principal' %}
+            <div class="item">
+                <div style="display: flex; justify-content: space-between;">
+                     <div><h3 class="item" style="margin: 0;"><b>{{ experiencia.cargo }}</b> <span class='where'>{{ experiencia.empresa }}: </span></h3></div>  
+                <!--<span class="item"><i></i></span>  --> 
+                <span style="margin: 0;">{{ experiencia.duracao }}</span></div>    
+            <p>{{ experiencia.descricao }}</p>
+             </div>
+            {% endif %} 
+            {% endfor %} 
+        </div> 
+        <div class="section">
+            <h2>{{secoes.experiencias_adicionais}}</h2>
+            {% for experiencia in experiencias %}
+             {% if experiencia.tipo == 'secundária' %}
+            <div class="item">
+                <div style="display: flex; justify-content: space-between;">
+                     <div><h3 class="item" style="margin: 0;"><b>{{ experiencia.cargo }}</b> <span class='where'>{{ experiencia.empresa }}: </span></h3></div>  
+                <!--<span class="item"><i></i></span>  --> 
+                <span style="margin: 0;">{{ experiencia.duracao }}</span></div>    
+            <p>{{ experiencia.descricao }}</p>
+             </div>
+            {% endif %} 
+            {% endfor %} 
+        </div>  
+        <div class="section">
+            <h2>{{secoes.formacao_complementar}}</h2>
+            {% for formacao in formacoes %}
+            {% if formacao.tipo == 'complementar' %}
+            <div class="item">
+                <div style="display: flex; justify-content: space-between;">
+                    <div><h3 class="item" style="margin: 0;"><b>{{ formacao.curso }}</b> <span class='where'>{{ formacao.instituicao }}</span></h3></div><div><span style="margin: 0;">{{ formacao.duracao }}</span></div>
+                </div> 
+                <p>{{ formacao.descricao }}</p>
+            </div>
+            {% endif %} 
+            {% endfor %}  
+        </div>
+        <div class="section">
+            <h2>{{secoes.habilidades_tecnicas}}</h2> 
+            <ul>
+                 {% for habilidade in habilidades  %}
+                    {% if habilidade.tipo == 'técnica' %}
+                        <li>
+                            <b>{{habilidade.classe}} :</b>
+                            <span class='p'>{{habilidade.nome}}.</span class='p'> 
+                        </li>
+                    {% endif %}
+                 {% endfor %} 
+            </ul>
+        </div>
+        <div class="section">
+            <h2>{{secoes.habilidades_comportamentais}}</h2>  
+            <ul>
+                 {% for habilidade in habilidades  %}
+                    {% if habilidade.tipo == 'comportamental' %}
+                        <li> 
+                            <span class='p'>{{habilidade.nome}}.</span class='p'> 
+                        </li>
+                    {% endif %}
+                 {% endfor %} 
+            </ul>
+        </div> 
+        <div class="section">
+            <h2>{{secoes.idiomas}}</h2>  
+            <div class='d-flex'>
+                 {% for habilidade in habilidades  %}
+                    {% if habilidade.tipo == 'idioma' %}
+                            <div class="flex-items">
+                                <b>{{habilidade.classe}} :</b>
+                                <span class='p'>{{habilidade.nome}}</span class='p'> 
+                            </div>
+                         
+                    {% endif %}
+                 {% endfor %} 
+            </div>
+        </div> 
+    </div>
+</body>
+</html>

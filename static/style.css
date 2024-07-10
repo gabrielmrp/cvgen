@@ -1,0 +1,97 @@
+* {
+    font-family: "Nunito", sans-serif;
+  font-optical-sizing: auto; 
+  font-style: normal;
+}
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    /*background-color: #aaafff;*/
+    font-size: 10pt;
+
+}
+.no-print {
+            display: none;
+        }
+.container {
+    width: 80%;
+    margin: auto;
+    background-color: white;
+    padding: 20px;
+     
+}
+h1, h2, h3 {
+    color: #333;
+}
+h1{
+    margin: 0.1em;
+    text-transform: uppercase;
+    font-size:3em;
+} 
+
+h2{
+    margin: 0.05em;
+    text-transform: uppercase;
+    font-size:2em;
+}     
+h3{
+    margin: 0.025em;
+    font-size: 1.25em;
+}
+
+div.item{
+    margin-bottom: 0px;
+}
+div.d-flex{
+    display: flex;
+}
+div.flex-items{
+    margin-right:30px;
+}
+span.where{
+    font-weight: 400;
+    font-style: italic;
+}
+li span.p{
+     
+    font-size: 1em;
+}
+li b, div.flex-items b{
+     font-size: 1.25em;
+}
+.header, .section {
+    margin-bottom: 20px;
+}
+.header {
+    text-align: center;
+}
+.header img {
+    border-radius: 50%;
+}
+.section {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+.section:last-of-type {
+    border-bottom: none;
+}
+.section h2 {
+    margin-bottom: 10px;
+}
+.section h3 {
+    margin : 0px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+.section p, .section ul {
+    margin-top: 5px;
+    padding: 0;
+    line-height: 20px;
+}
+.section ul {
+    list-style-type: none;
+}
+.section ul li {
+    margin-bottom: 10px;
+}
