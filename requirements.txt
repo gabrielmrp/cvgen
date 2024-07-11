@@ -50,6 +50,7 @@ tzdata==2024.1
 tzlocal==5.2
 uritools==4.0.3
 urllib3==2.2.2
+waitress==3.0.0
 weasyprint==62.3
 webencodings==0.5.1
 Werkzeug==3.0.3
