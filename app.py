@@ -6,7 +6,7 @@ import io
 from xhtml2pdf import pisa
 #config = pdfkit.configuration(wkhtmltopdf='C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe')
  
-
+app = Flask(__name__)
 def convert_html_to_pdf(html):
     result = io.BytesIO()
     pdf = pisa.pisaDocument(io.BytesIO(html.encode("UTF-8")), dest=result)
@@ -15,7 +15,7 @@ def convert_html_to_pdf(html):
     return None
 
 def get_user_data(idioma): 
-    data_source = 'dados_exemplo'
+    data_source = 'dados'
     df = pd.read_excel(data_source+'.xlsx', sheet_name='Cabeçalho') 
 
     df['rotulo'] = df['rotulo_'+idioma]
@@ -59,17 +59,17 @@ def get_user_data(idioma):
     df_merged['classe'] = df_merged['classe_'+idioma]
     habilidades = df_merged.groupby(['classe','tipo'])['nome'].apply(' / '.join).reset_index().to_dict('records')
      
-    df_secoes = pd.read_excel(data_source+'.xlsx', sheet_name='Seções').fillna('')
+    df_sessoes = pd.read_excel(data_source+'.xlsx', sheet_name='Seções').fillna('')
     # Transforme as experiências em uma lista de dicionários
     
-    secoes = df_secoes.set_index([df_secoes.columns[1]]).to_dict()['nome_'+idioma]
+    sessoes = df_sessoes.set_index([df_sessoes.columns[1]]).to_dict()['nome_'+idioma]
     #print(secoes)
-    return user_data, experiencias, formacoes, habilidades, secoes 
+    return user_data, experiencias, formacoes, habilidades, sessoes 
 
 @app.route('/')
 def home(idioma='pt'): 
 
-    user_data, experiencias, formacoes, habilidades, secoes  = get_user_data(idioma)
+    user_data, experiencias, formacoes, habilidades, sessoes  = get_user_data(idioma)
 
     # Convert HTML file to PDF
     #pdfkit.from_file('/templates/curriculo.html', 'output.pdf')
@@ -79,10 +79,19 @@ def home(idioma='pt'):
     
     html_content =  render_template('curriculo.html', 
         user_data=user_data,  
-        secoes=secoes,
+        sessoes=sessoes,
         experiencias=experiencias, 
         formacoes=formacoes,
         habilidades=habilidades,
+        ordem_sessoes =  [
+                            'formacao',
+                            'experiencias',
+                            'experiencias_adicionais',
+                            'formacao_complementar',
+                            'habilidades_tecnicas',
+                            'habilidades_comportamentais',
+                            'idiomas'
+                            ]
         #classes_habilidades_tecnicas = np.unique([i['classe'] for i in habilidades if i['tipo'] == 'técnica']),
         #classes_habilidades_comportamentais = np.unique([i['classe'] for i in habilidades if i['tipo'] == 'comportamental'])
         )

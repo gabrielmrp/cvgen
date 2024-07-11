@@ -1,0 +1,14 @@
+<div class="section" name="idiomas">
+    <h2>{{sessoes.idiomas}}</h2>  
+    <div class='d-flex'>
+         {% for habilidade in habilidades  %}
+            {% if habilidade.tipo == 'idioma' %}
+                    <div class="flex-items">
+                        <b>{{habilidade.classe}} :</b>
+                        <span class='p'>{{habilidade.nome}}</span class='p'> 
+                    </div>
+                 
+            {% endif %}
+         {% endfor %} 
+    </div>
+</div> 

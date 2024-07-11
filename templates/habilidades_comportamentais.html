@@ -1,0 +1,12 @@
+<div class="section" name="habilidades_comportamentais">
+    <h2>{{sessoes.habilidades_comportamentais}}</h2>  
+    <ul>
+         {% for habilidade in habilidades  %}
+            {% if habilidade.tipo == 'comportamental' %}
+                <li> 
+                    <span class='p'>{{habilidade.nome}}.</span class='p'> 
+                </li>
+            {% endif %}
+         {% endfor %} 
+    </ul>
+</div> 
