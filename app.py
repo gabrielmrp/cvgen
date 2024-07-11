@@ -5,9 +5,7 @@ import io
 #import pdfkit
 from xhtml2pdf import pisa
 #config = pdfkit.configuration(wkhtmltopdf='C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe')
-
-
-app = Flask(__name__)
+ 
 
 def convert_html_to_pdf(html):
     result = io.BytesIO()
@@ -99,6 +97,11 @@ def index_en():
 def index_pt():
     IDIOMA = 'pt'
     return home(IDIOMA)
+
+def create_app():
+    app = Flask(__name__)
+    # Configurações e registros de extensões aqui, se houver
+    return app
 
 if __name__ == '__main__':
     app.run(debug=True, port=9970)
