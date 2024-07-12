@@ -27,7 +27,7 @@
             document.getElementById('save-pdf').addEventListener('click', () => {
                 const element = document.body;
                 const opt = {
-                    margin:       0,
+                    margin:       [20, 0, {{margem}}, 0] ,
                     filename:     '{{ "resume_en.pdf" if idioma == "en" else "curriculo_pt.pdf" }}',
                     image:        { type: 'jpeg', quality: 1 },
                     html2canvas:  { scale: 2},
