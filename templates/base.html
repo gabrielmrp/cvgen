@@ -21,14 +21,16 @@
         font-size: 18px; /* Adjust the font size for headers */
     }
         </style>
+        <div class="controls">
         <button id="save-pdf">Save as PDF</button>
+        </div>
 
         <script>
             document.getElementById('save-pdf').addEventListener('click', () => {
                 const element = document.body;
                 const opt = {
                     margin:       [20, 0, {{margem}}, 0] ,
-                    filename:     '{{ "resume_en.pdf" if idioma == "en" else "curriculo_pt.pdf" }}',
+                    filename:     '{{ file_name }}',
                     image:        { type: 'jpeg', quality: 1 },
                     html2canvas:  { scale: 2},
                     jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
@@ -38,15 +40,35 @@
                 // New Promise-based usage:
                 html2pdf().from(element).set(opt).save().then(() => {
                     // Remove the 'no-print' class after the PDF is generated
-                    document.getElementById('save-pdf').classList.remove('no-print');
-                });
+                document.getElementById('save-pdf').classList.remove('no-print');
+                    // Make a POST request to the Flask server to move the PDF
+
+                setTimeout(() => {
+                    fetch('http://127.0.0.1:9970/move-pdf', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            file_name: '{{ file_name }}',
+                            download_path: '{{ download_path }}',
+                            destination_path: '{{ destination_path }}'
+                        })
+                    })
+                    .then(response => response.text())
+                    .then(data => console.log(data))
+                    .catch(error => console.error('Error:', error));
+                }, 3000);    
+
+
             });
+        });
         </script>
         <main>
         {% block content %}{% endblock %}
         </main>
         <footer>
-        <p>&copy; 2024 GAMARP</p>
-    </footer>
+            <span>&copy; 2024 GAMARP</span>
+        </footer>
     </body>
 </html>

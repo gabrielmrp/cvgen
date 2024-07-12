@@ -2,10 +2,14 @@ idioma
 	pt
 nome
 	Currículo de Gustavo
-filename
-	cv_g.pdf
+arquivo
+	exemplo_pt.pdf
+pasta_downloads
+	C:\\Users\\GABRIEL\\Downloads
+pasta_curriculos
+	C:\\Users\\GABRIEL\\Documents\\curriculo\\curriculos
 margem
-	30
+	0
 estrutura
 	formacao
 		grad

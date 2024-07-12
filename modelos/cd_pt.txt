@@ -5,7 +5,7 @@ nome
 filename
 	file.pdf
 margem
-	30
+	0
 estrutura
 	formacao
 		grad

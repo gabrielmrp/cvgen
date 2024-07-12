@@ -21,6 +21,24 @@ body {
     padding: 20px;
      
 }
+
+div.section
+{
+    page-break-inside: avoid;
+}
+div.controls{
+    background-color: #f1f1f1; /* Apenas para visibilidade */ 
+    margin: 2px;
+}
+
+
+footer {
+     
+    text-align: center;
+    background-color: #f1f1f1; /* Apenas para visibilidade */
+    padding: 10px;
+}
+
 h1, h2, h3 {
     color: #333;
 }

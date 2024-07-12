@@ -1,20 +1,55 @@
-from flask import Flask, render_template, make_response, redirect, url_for
+from flask import Flask, render_template, make_response, redirect, url_for, request
+from flask_cors import CORS
 import pandas as pd
 import numpy as np
 import io
+import os
+import shutil
 #import pdfkit
 from xhtml2pdf import pisa
 #config = pdfkit.configuration(wkhtmltopdf='C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe')
 import json 
+from datetime import datetime
 
 
 app = Flask(__name__)
+CORS(app)
+
 def convert_html_to_pdf(html):
     result = io.BytesIO()
     pdf = pisa.pisaDocument(io.BytesIO(html.encode("UTF-8")), dest=result)
     if not pdf.err:
         return result.getvalue()
     return None
+
+@app.route('/move-pdf', methods=['POST'])
+def move_pdf():
+    download_path = request.json.get('download_path')
+    destination_path = request.json.get('destination_path')
+    file_name = request.json.get('file_name')
+
+    # Verifica o caminho completo do arquivo a ser movido
+    file_path = os.path.join(download_path, file_name)
+
+    if os.path.exists(file_path):
+        # Verifica se o arquivo com mesmo nome já existe no destino
+        if os.path.exists(os.path.join(destination_path, file_name)):
+            # Gera um timestamp para acrescentar ao nome do arquivo
+            timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+            
+            # Renomeia o arquivo antigo adicionando o timestamp
+            deprecated_file_name = f"{os.path.splitext(file_name)[0]}_versao_{timestamp}{os.path.splitext(file_name)[1]}"
+            
+            # Move o arquivo antigo para a pasta 'versoes' dentro do destino
+            shutil.move(os.path.join(destination_path, file_name), os.path.join(destination_path, 'versoes', deprecated_file_name))
+        
+        # Move o novo arquivo para o destino principal
+        shutil.move(file_path, os.path.join(destination_path, file_name))
+        
+        return f'{file_name} movido para {destination_path}\\versoes', 200
+    else:
+        return f'{file_name} - Arquivo não encontrado', 404
+
 
 def carregar_dados(data_source, sheet_name, idioma, colunas):
     df = pd.read_excel(f'{data_source}.xlsx', sheet_name=sheet_name)
@@ -178,8 +213,7 @@ def home(idioma='pt'):
 
     # Convert HTML file to PDF
     #pdfkit.from_file('/templates/curriculo.html', 'output.pdf') 
-    print(experiencias_adicionais)
-
+    
     
     html_content =  render_template('curriculo.html', 
         user_data=cabecalho,  
@@ -189,7 +223,10 @@ def home(idioma='pt'):
         habilidades=habilidades,
         experiencias_adicionais=experiencias_adicionais,
         formacoes_complementares=formacoes_complementares,
-        margem=model_data['margem'],
+        margem=model_data['margem'], 
+        file_name=model_data['arquivo'],
+        download_path=model_data['pasta_downloads'],
+        destination_path=model_data['pasta_curriculos'],
         ordem_sessoes =  [
                             'formacao',
                             'experiencias',
