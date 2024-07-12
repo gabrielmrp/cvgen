@@ -1,8 +1,10 @@
 {
     "idioma": "pt",
     "nome": "Currículo de Gustavo",
-    "filename": "cv_g.pdf",
-    "margem": "30",
+    "arquivo": "exemplo_pt.pdf",
+    "pasta_downloads": "C:\\\\Users\\\\GABRIEL\\\\Downloads",
+    "pasta_curriculos": "C:\\\\Users\\\\GABRIEL\\\\Documents\\\\curriculo\\\\curriculos",
+    "margem": "0",
     "estrutura": {
         "formacao": [
             "grad"
