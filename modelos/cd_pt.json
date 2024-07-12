@@ -1,0 +1,30 @@
+{
+    "idioma": "en",
+    "nome": "Cientista de Dados",
+    "filename": "file.pdf",
+    "margem": "30",
+    "estrutura": {
+        "formacao": [
+            "grad"
+        ],
+        "experiencias": [
+            "ame",
+            "chut",
+            "up2"
+        ],
+        "experiencias_adicionais": [
+            "belo",
+            "kfa",
+            "pça"
+        ],
+        "formacao_complementar": [
+            "ebd",
+            "adev",
+            "stp"
+        ],
+        "aws": [],
+        "habilidades_tecnicas": [],
+        "habilidades_comportamentais": [],
+        "idiomas": []
+    }
+}

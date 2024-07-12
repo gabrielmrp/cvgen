@@ -1,0 +1,30 @@
+{
+    "idioma": "pt",
+    "nome": "Currículo de Gustavo",
+    "filename": "cv_g.pdf",
+    "margem": "30",
+    "estrutura": {
+        "formacao": [
+            "grad"
+        ],
+        "experiencias": [
+            "nov",
+            "luna",
+            "aqn",
+            "eco"
+        ],
+        "experiencias_adicionais": [
+            "yop",
+            "pipa"
+        ],
+        "formacao_complementar": [
+            "mic",
+            "fer",
+            "csap"
+        ],
+        "agil": [],
+        "habilidades_tecnicas": [],
+        "habilidades_comportamentais": [],
+        "idiomas": []
+    }
+}
