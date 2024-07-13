@@ -62,9 +62,14 @@ def processar_cabecalho(df):
     df.set_index('chave', inplace=True)
     return df.apply(lambda row: {'valor': row['valor'], 'rotulo': row['rotulo']}, axis=1).to_dict()
 
-def processar_historico(df,selecion_ordered,campos):
-    df = df[df['alias'].isin(selecion_ordered)]
-    df['selecion_ordered'] = pd.Categorical(df['alias'], categories=selecion_ordered, ordered=True)
+def processar_historico(df,selecion_ordered,campos): 
+    print(selecion_ordered)
+    df['tem_detalhe'] = df['alias'].apply(lambda x: any(alias.startswith(x) for alias in selecion_ordered if ' ...' in alias)) 
+    selecion_ordered = new_array = [item.replace(" ...", "") if item[-4:] == ' ...' else item for item in selecion_ordered]
+    df = df[df['alias'].isin(selecion_ordered)].fillna('')
+    print(df.tem_detalhe)
+
+    df.loc[:,'selecion_ordered'] = pd.Categorical(df['alias'], categories=selecion_ordered, ordered=True) 
     df = df.sort_values('selecion_ordered')
     return df[campos].to_dict('records') 
 
@@ -72,7 +77,7 @@ def processar_experiencias(df,selecion_ordered,secundario=False):
     df.loc['tipo'] = 'principal'
     if secundario:
         df.loc['tipo'] = 'complementar'
-    return processar_historico(df,selecion_ordered,['empresa', 'cargo', 'duracao', 'descricao', 'tipo'])
+    return processar_historico(df,selecion_ordered,['empresa', 'cargo', 'duracao', 'descricao', 'tipo','detalhe_1','detalhe_2','detalhe_3','detalhe_4','detalhe_5','tem_detalhe'])
 
 def processar_experiencias_adicionais(df,selecion_ordered):
     return processar_experiencias(df,selecion_ordered,True)
@@ -81,7 +86,7 @@ def processar_formacoes(df,selecion_ordered,secundario=False):
     df.loc['tipo'] = 'principal'
     if secundario:
         df.loc['tipo'] = 'secundária'
-    return processar_historico(df,selecion_ordered,['curso', 'instituicao', 'duracao', 'descricao', 'tipo'])
+    return processar_historico(df,selecion_ordered,['curso', 'instituicao', 'duracao', 'descricao', 'tipo', 'detalhe_1','detalhe_2','detalhe_3','detalhe_4','detalhe_5','tem_detalhe'])
 
 def processar_formacoes_complementares(df,selecion_ordered): 
     return processar_formacoes(df,selecion_ordered,True)

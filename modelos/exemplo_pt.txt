@@ -5,24 +5,24 @@ nome
 arquivo
 	exemplo_pt.pdf
 pasta_downloads
-	C:\\Users\\GABRIEL\\Downloads
+	q
 pasta_curriculos
-	C:\\Users\\GABRIEL\\Documents\\curriculo\\curriculos
+	q
 margem
 	0
 estrutura
 	formacao
-		grad
+		grad ...
 	experiencias 
-		nov
+		nov ...
 		luna
 		aqn
 		eco
 	experiencias_adicionais  
-		yop
+		yop ...
 		pipa 
 	formacao_complementar
-		mic
+		mic ...
 		fer
 		csap
 		agil		

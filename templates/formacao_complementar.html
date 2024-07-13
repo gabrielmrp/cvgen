@@ -3,9 +3,18 @@
     {% for formacao_complementar in formacoes_complementares %} 
     <div class="item">
         <div style="display: flex; justify-content: space-between;">
-            <div><h3 class="item" style="margin: 0;"><b>{{ formacao_complementar.curso }}</b> <span class='where'>{{ formacao_complementar.instituicao }}</span></h3></div><div><span style="margin: 0;">{{ formacao_complementar.duracao }}</span></div>
+            <div><h3 class="item" ><b>{{ formacao_complementar.curso }}</b> <span class='where'>{{ formacao_complementar.instituicao }}</span></h3></div><div><span style="margin: 0;">{{ formacao_complementar.duracao }}</span></div>
         </div> 
         <p>{{ formacao_complementar.descricao }}</p>
+        {% if formacao_complementar.tem_detalhe %}
+            <ul>
+                {% if formacao_complementar.detalhe_1 != '' %} <li><span>{{ formacao_complementar.detalhe_1 }}</span></li>{% endif %} 
+                {% if formacao_complementar.detalhe_2 != '' %} <li><span>{{ formacao_complementar.detalhe_2 }}</span></li>{% endif %} 
+                {% if formacao_complementar.detalhe_3 != '' %} <li><span>{{ formacao_complementar.detalhe_3 }}</span></li>{% endif %} 
+                {% if formacao_complementar.detalhe_4 != '' %} <li><span>{{ formacao_complementar.detalhe_4 }}</span></li>{% endif %} 
+                {% if formacao_complementar.detalhe_5 != '' %} <li><span>{{ formacao_complementar.detalhe_5 }}</span></li>{% endif %} 
+            </ul>
+            {% endif %}  
     </div> 
     {% endfor %}  
 </div>

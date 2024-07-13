@@ -32,15 +32,17 @@
                     margin:       [20, 0, {{margem}}, 0] ,
                     filename:     '{{ file_name }}',
                     image:        { type: 'jpeg', quality: 1 },
-                    html2canvas:  { scale: 2},
+                    html2canvas:  { scale: 3},
                     jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
                 };
 
                 document.getElementById('save-pdf').classList.add('no-print');
+                document.getElementById('footer').classList.add('no-print');
                 // New Promise-based usage:
                 html2pdf().from(element).set(opt).save().then(() => {
                     // Remove the 'no-print' class after the PDF is generated
                 document.getElementById('save-pdf').classList.remove('no-print');
+                document.getElementById('footer').classList.remove('no-print');
                     // Make a POST request to the Flask server to move the PDF
 
                 setTimeout(() => {
@@ -67,7 +69,7 @@
         <main>
         {% block content %}{% endblock %}
         </main>
-        <footer>
+        <footer id="footer">
             <span>&copy; 2024 GAMARP</span>
         </footer>
     </body>
