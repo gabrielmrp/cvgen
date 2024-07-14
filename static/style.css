@@ -21,6 +21,12 @@ body {
     padding: 1em;
      
 }
+h2.resumo{
+    text-transform: none ;
+    font-weight: 400;
+        font-style: italic;
+    font-size: 1.8em;
+}
 
 div.section
 {

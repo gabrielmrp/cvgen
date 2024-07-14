@@ -11,18 +11,19 @@ pasta_curriculos
 margem
 	0
 estrutura
+	resumo
 	formacao
-		grad ...
+		grad
 	experiencias 
 		nov ...
 		luna
 		aqn
 		eco
 	experiencias_adicionais  
-		yop ...
+		yop
 		pipa 
 	formacao_complementar
-		mic ...
+		mic 
 		fer
 		csap
 		agil		
