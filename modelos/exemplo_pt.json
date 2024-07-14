@@ -2,12 +2,13 @@
     "idioma": "pt",
     "nome": "Currículo de Gustavo",
     "arquivo": "exemplo_pt.pdf",
-    "pasta_downloads": "C:\\Users\\GABRIEL\\Documents\\Downloads",
-    "pasta_curriculos": "C:\\Users\\GABRIEL\\Documents\\curriculo\\curriculos",
+    "pasta_downloads": "q",
+    "pasta_curriculos": "q",
     "margem": "0",
     "estrutura": {
+        "resumo": [],
         "formacao": [
-            "grad ..."
+            "grad"
         ],
         "experiencias": [
             "nov ...",
@@ -16,11 +17,11 @@
             "eco"
         ],
         "experiencias_adicionais": [
-            "yop ...",
+            "yop",
             "pipa"
         ],
         "formacao_complementar": [
-            "mic ...",
+            "mic",
             "fer",
             "csap"
         ],

@@ -73,6 +73,11 @@ def processar_historico(df,selecion_ordered,campos):
     df = df.sort_values('selecion_ordered')
     return df[campos].to_dict('records') 
 
+def processar_resumo(df):
+    return df['texto'].values[0]
+
+
+
 def processar_experiencias(df,selecion_ordered,secundario=False):
     df.loc['tipo'] = 'principal'
     if secundario:
@@ -185,6 +190,9 @@ def get_user_data(idioma):
     with open('modelos/exemplo_pt.json', 'r') as f:
         model = json.load(f)
 
+    df_resumo = carregar_dados(data_source, 'Resumo', idioma, ['texto'])
+    resumo = processar_resumo(df_resumo)
+    
     df_cabecalho = carregar_dados(data_source, 'Cabeçalho', idioma, ['rotulo', 'valor'])
     cabecalho = processar_cabecalho(df_cabecalho)
     
@@ -204,7 +212,7 @@ def get_user_data(idioma):
     df_sessoes = pd.read_excel(f'{data_source}.xlsx', sheet_name='Seções').fillna('')
     sessoes = processar_sessoes(df_sessoes, idioma)
 
-    return cabecalho, experiencias,experiencias_adicionais, formacoes,formacoes_complementares, habilidades, sessoes
+    return cabecalho, resumo, experiencias,experiencias_adicionais, formacoes,formacoes_complementares, habilidades, sessoes
 
 
 @app.route('/')
@@ -214,7 +222,7 @@ def home(idioma='pt'):
     idioma = model_data['idioma']
  
  
-    cabecalho, experiencias,experiencias_adicionais, formacoes,formacoes_complementares, habilidades, sessoes  = get_user_data(idioma)
+    cabecalho, resumo, experiencias,experiencias_adicionais, formacoes,formacoes_complementares, habilidades, sessoes  = get_user_data(idioma)
 
     # Convert HTML file to PDF
     #pdfkit.from_file('/templates/curriculo.html', 'output.pdf') 
@@ -222,6 +230,7 @@ def home(idioma='pt'):
     
     html_content =  render_template('curriculo.html', 
         user_data=cabecalho,  
+        resumo=resumo,
         sessoes=sessoes,
         experiencias=experiencias, 
         formacoes=formacoes,
