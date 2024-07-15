@@ -1,7 +1,6 @@
 <div class="section" name="experiencias">
     <h2>{{sessoes.experiencias}}</h2>
-    {% for experiencia in experiencias %}
-    {% if experiencia.tipo == 'principal' %}
+    {% for experiencia in experiencias %} 
     <div class="item">
         <div style="display: flex; justify-content: space-between;">
              <div><h3 class="item" ><b>{{ experiencia.cargo }}</b> <span class='where'>{{ experiencia.empresa }}: </span></h3></div>  
@@ -17,7 +16,6 @@
                 {% if experiencia.detalhe_5 != '' %} <li><span>{{ experiencia.detalhe_5 }}</span></li>{% endif %} 
             </ul>
             {% endif %}  
-     </div>
-    {% endif %} 
+     </div> 
     {% endfor %} 
 </div>

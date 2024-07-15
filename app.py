@@ -10,7 +10,17 @@ from xhtml2pdf import pisa
 #config = pdfkit.configuration(wkhtmltopdf='C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe')
 import json 
 from datetime import datetime
+pd.options.mode.chained_assignment = None
 
+input_file_path = 'modelos/exemplo_pt.txt'
+output_file_path = 'modelos/exemplo_pt.json'
+INPUT_JSON = 'exemplo_pt.json'
+data_source = 'dados_exemplo'
+
+#data_source = 'dados'#_exemplo
+#input_file_path = 'modelos/cd_pt.txt'
+#output_file_path = 'modelos/cd_pt.json'  
+#INPUT_JSON = 'cd_pt.json'
 
 app = Flask(__name__)
 CORS(app)
@@ -57,48 +67,59 @@ def carregar_dados(data_source, sheet_name, idioma, colunas):
         df[col] = df[f'{col}_{idioma}']
     return df
 
-def processar_cabecalho(df):
-    df = df[['chave', 'valor', 'rotulo']]
-    df.set_index('chave', inplace=True)
+def processar_cabecalho(df,alias_selecionados_ordenados):
+    print(alias_selecionados_ordenados)
+    df = df[['alias', 'valor', 'rotulo']]
+    #print(ge)
+    if alias_selecionados_ordenados !=  '*' :
+       df.loc[:,'alias_selecionados_ordenados'] = pd.Categorical(df['alias'], categories=alias_selecionados_ordenados, ordered=True) 
+       df = df.sort_values('alias_selecionados_ordenados').dropna(subset=['alias_selecionados_ordenados'])
+    
+    df.set_index('alias', inplace=True)
     return df.apply(lambda row: {'valor': row['valor'], 'rotulo': row['rotulo']}, axis=1).to_dict()
 
-def processar_historico(df,selecion_ordered,campos): 
-    print(selecion_ordered)
-    df['tem_detalhe'] = df['alias'].apply(lambda x: any(alias.startswith(x) for alias in selecion_ordered if ' ...' in alias)) 
-    selecion_ordered = new_array = [item.replace(" ...", "") if item[-4:] == ' ...' else item for item in selecion_ordered]
-    df = df[df['alias'].isin(selecion_ordered)].fillna('')
-    print(df.tem_detalhe)
+def processar_historico(df,alias_selecionados_ordenados,campos):  
+    #print(dw)
+    df['tem_detalhe'] = df['alias'].apply(lambda x: any(alias.startswith(x) for alias in alias_selecionados_ordenados if ' ...' in alias)) 
+    alias_selecionados_ordenados = new_array = [item.replace(" ...", "") if item[-4:] == ' ...' else item for item in alias_selecionados_ordenados]
+    df = df[df['alias'].isin(alias_selecionados_ordenados)] 
 
-    df.loc[:,'selecion_ordered'] = pd.Categorical(df['alias'], categories=selecion_ordered, ordered=True) 
-    df = df.sort_values('selecion_ordered')
-    return df[campos].to_dict('records') 
+    df.loc[:,'alias_selecionados_ordenados'] = pd.Categorical(df['alias'], categories=alias_selecionados_ordenados, ordered=True) 
+    df = df.sort_values('alias_selecionados_ordenados')
+    return df[campos].fillna('').to_dict('records') 
 
-def processar_resumo(df):
-    return df['texto'].values[0]
+def processar_resumo(df,alias_selecionados_ordenados):
+
+    #print(wd)
+    df = df[df['alias'].isin(alias_selecionados_ordenados)] 
+
+    df.loc[:,'alias_selecionados_ordenados'] = pd.Categorical(df['alias'], categories=alias_selecionados_ordenados, ordered=True) 
+    
+    return df.head(1)['texto'].values[0]
 
 
 
-def processar_experiencias(df,selecion_ordered,secundario=False):
-    df.loc['tipo'] = 'principal'
+def processar_experiencias(df,alias_selecionados_ordenados,secundario=False):
+    df['tipo'] = 'principal'
     if secundario:
-        df.loc['tipo'] = 'complementar'
-    return processar_historico(df,selecion_ordered,['empresa', 'cargo', 'duracao', 'descricao', 'tipo','detalhe_1','detalhe_2','detalhe_3','detalhe_4','detalhe_5','tem_detalhe'])
+        df['tipo'] = 'complementar' 
+    return processar_historico(df,alias_selecionados_ordenados,['empresa', 'cargo', 'duracao','tipo', 'descricao', 'detalhe_1','detalhe_2','detalhe_3','detalhe_4','detalhe_5','tem_detalhe'])
 
-def processar_experiencias_adicionais(df,selecion_ordered):
-    return processar_experiencias(df,selecion_ordered,True)
+def processar_experiencias_adicionais(df,alias_selecionados_ordenados):
+    return processar_experiencias(df,alias_selecionados_ordenados,True)
 
-def processar_formacoes(df,selecion_ordered,secundario=False):
-    df.loc['tipo'] = 'principal'
+def processar_formacoes(df,alias_selecionados_ordenados,secundario=False):
+    df['tipo'] = 'principal'
     if secundario:
-        df.loc['tipo'] = 'secundária'
-    return processar_historico(df,selecion_ordered,['curso', 'instituicao', 'duracao', 'descricao', 'tipo', 'detalhe_1','detalhe_2','detalhe_3','detalhe_4','detalhe_5','tem_detalhe'])
+        df['tipo'] = 'secundária' 
+    return processar_historico(df,alias_selecionados_ordenados,['curso', 'instituicao', 'duracao','tipo', 'descricao',  'detalhe_1','detalhe_2','detalhe_3','detalhe_4','detalhe_5','tem_detalhe'])
 
-def processar_formacoes_complementares(df,selecion_ordered): 
-    return processar_formacoes(df,selecion_ordered,True)
+def processar_formacoes_complementares(df,alias_selecionados_ordenados): 
+    return processar_formacoes(df,alias_selecionados_ordenados,True)
  
 
 def processar_habilidades(df_habilidades_simples, df_classes, idioma):
-    df_habilidades = pd.merge(df_habilidades_simples, df_classes, on='classe')
+    df_habilidades = pd.merge(df_habilidades_simples, df_classes, on='classe').fillna('')
     df_habilidades['nome'] = df_habilidades[f'nome_{idioma}']
     df_habilidades['classe'] = df_habilidades[f'classe_{idioma}']
     return df_habilidades.groupby(['classe', 'tipo'])['nome'].apply(' / '.join).reset_index().to_dict('records')
@@ -112,7 +133,12 @@ def transform():
     def parse_txt(file_path):
 
         with open(file_path, 'r', encoding='utf-8') as file:
-                    lines = file.readlines()
+                    lines = []
+                    for line in file:
+                        if " --" in line:
+                            line = line.split(" --")[0]
+                        lines.append(line)
+
         lines = [line for line in lines if line.strip()]
 
         lists = []
@@ -175,9 +201,7 @@ def transform():
             json.dump(data, json_file, ensure_ascii=False, indent=4)
 
     # Teste do algoritmo
-    input_file_path = 'modelos/exemplo_pt.txt'
-    output_file_path = 'modelos/exemplo_pt.json'
-
+   
     parsed_data = parse_txt(input_file_path)
     save_as_json(parsed_data, output_file_path) 
     return parsed_data 
@@ -185,34 +209,40 @@ def transform():
 
 
 def get_user_data(idioma):
-    data_source = 'dados_exemplo'
-
-    with open('modelos/exemplo_pt.json', 'r') as f:
+    
+   
+    with open('modelos/'+INPUT_JSON, 'r') as f:
         model = json.load(f)
 
     df_resumo = carregar_dados(data_source, 'Resumo', idioma, ['texto'])
-    resumo = processar_resumo(df_resumo)
     
-    df_cabecalho = carregar_dados(data_source, 'Cabeçalho', idioma, ['rotulo', 'valor'])
-    cabecalho = processar_cabecalho(df_cabecalho)
+    resumo = processar_resumo(df_resumo,model['estrutura']['resumo'])
     
-    df_experiencias = carregar_dados(data_source, 'Experiências', idioma, ['empresa', 'cargo', 'duracao', 'descricao'])
+    df_cabecalho = carregar_dados(data_source, 'Cabeçalho', idioma, ['rotulo', 'valor']) 
+    cabecalho = processar_cabecalho(df_cabecalho,model['estrutura']['cabecalho'])
+    
+    df_experiencias = carregar_dados(data_source, 'Experiências', idioma, ['empresa', 'cargo', 'duracao', 'descricao','detalhe_1','detalhe_2','detalhe_3','detalhe_4','detalhe_5'])
     experiencias = processar_experiencias(df_experiencias,model['estrutura']['experiencias'])
     experiencias_adicionais = processar_experiencias_adicionais(df_experiencias,model['estrutura']['experiencias_adicionais'])
 
-
-    df_formacoes = carregar_dados(data_source, 'Formações', idioma, ['curso', 'instituicao', 'duracao', 'descricao'])
+    df_outros = carregar_dados(data_source, 'Outros', idioma, ['descricao'])
+    outros = processar_historico(df_outros,model['estrutura']['outros'],['duracao', 'descricao'])
+ 
+    df_formacoes = carregar_dados(data_source, 'Formações', idioma, ['curso', 'instituicao', 'duracao', 'descricao','detalhe_1','detalhe_2','detalhe_3','detalhe_4','detalhe_5'])
     formacoes = processar_formacoes(df_formacoes,model['estrutura']['formacao'])
     formacoes_complementares = processar_formacoes_complementares(df_formacoes,model['estrutura']['formacao_complementar'])
+
+
     
-    df_habilidades_simples = pd.read_excel(f'{data_source}.xlsx', sheet_name='Habilidades').fillna('')
-    df_classes = pd.read_excel(f'{data_source}.xlsx', sheet_name='Classes').fillna('')
+    df_habilidades_simples = pd.read_excel(f'{data_source}.xlsx', sheet_name='Habilidades')
+    df_classes = pd.read_excel(f'{data_source}.xlsx', sheet_name='Classes')
     habilidades = processar_habilidades(df_habilidades_simples, df_classes, idioma)
+ 
     
-    df_sessoes = pd.read_excel(f'{data_source}.xlsx', sheet_name='Seções').fillna('')
+    df_sessoes = pd.read_excel(f'{data_source}.xlsx', sheet_name='Seções')
     sessoes = processar_sessoes(df_sessoes, idioma)
 
-    return cabecalho, resumo, experiencias,experiencias_adicionais, formacoes,formacoes_complementares, habilidades, sessoes
+    return cabecalho, resumo, experiencias,experiencias_adicionais, formacoes,formacoes_complementares, outros, habilidades, sessoes
 
 
 @app.route('/')
@@ -222,12 +252,8 @@ def home(idioma='pt'):
     idioma = model_data['idioma']
  
  
-    cabecalho, resumo, experiencias,experiencias_adicionais, formacoes,formacoes_complementares, habilidades, sessoes  = get_user_data(idioma)
-
-    # Convert HTML file to PDF
-    #pdfkit.from_file('/templates/curriculo.html', 'output.pdf') 
-    
-    
+    cabecalho, resumo, experiencias,experiencias_adicionais, formacoes,formacoes_complementares, outros, habilidades, sessoes  = get_user_data(idioma)
+  
     html_content =  render_template('curriculo.html', 
         user_data=cabecalho,  
         resumo=resumo,
@@ -237,21 +263,12 @@ def home(idioma='pt'):
         habilidades=habilidades,
         experiencias_adicionais=experiencias_adicionais,
         formacoes_complementares=formacoes_complementares,
+        outros=outros,
         margem=model_data['margem'], 
         file_name=model_data['arquivo'],
         download_path=model_data['pasta_downloads'],
         destination_path=model_data['pasta_curriculos'],
-        ordem_sessoes =  [
-                            'formacao',
-                            'experiencias',
-                            'experiencias_adicionais',
-                            'formacao_complementar',
-                            'habilidades_tecnicas',
-                            'habilidades_comportamentais',
-                            'idiomas'
-                            ]
-        #classes_habilidades_tecnicas = np.unique([i['classe'] for i in habilidades if i['tipo'] == 'técnica']),
-        #classes_habilidades_comportamentais = np.unique([i['classe'] for i in habilidades if i['tipo'] == 'comportamental'])
+        ordem_sessoes =  list(model_data['estrutura'].keys()) 
         )
     return html_content
    
@@ -272,13 +289,4 @@ def create_app():
 
 if __name__ == '__main__':
     app.run(debug=True, port=9970)
-
-
-# pdf = convert_html_to_pdf(html_content)
-#
-#    if pdf:
-#        response = make_response(pdf)
-#        response.headers['Content-Type'] = 'application/pdf'
-#        response.headers['Content-Disposition'] = 'inline; filename=output.pdf'
-#        return response
-#    return "Error generating PDF"
+ 

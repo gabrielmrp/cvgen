@@ -2,26 +2,52 @@ idioma
 	en
 nome
 	Cientista de Dados
-filename
-	file.pdf
+arquivo
+	cd_pt.pdf
+pasta_downloads
+	C:\\Users\\GABRIEL\\Downloads
+pasta_curriculos
+	C:\\Users\\GABRIEL\\Documents\\curriculo\\curriculos
 margem
 	0
 estrutura
+	cabecalho
+		nome
+		perfil
+		titulo
+		cidade
+		uf
+		telefone
+		linkedin
+		email
+		url 
+	resumo
+		main
 	formacao
 		grad
 	experiencias 
-		ame
-		chut
-		up2
+		ame ...
+		chut ...
+		up2 ...
 	experiencias_adicionais 
-		belo
-		kfa
+		unuh
 		pça
+		belo
+		abcb
+		nex
+		sete
+		kfa
+		ccnm 
 	formacao_complementar
-		ebd
 		adev
 		stp
-		aws		
+		aws
+		ebd
+		hack
+		isa
+		mlb 
 	habilidades_tecnicas 
 	habilidades_comportamentais
 	idiomas 
+	outros
+		cov
