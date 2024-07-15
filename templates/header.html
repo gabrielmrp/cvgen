@@ -1,10 +1,40 @@
 <div class="header">
-    <h1>{{ user_data.nome.valor }}</h1>
-    <h2>{{ user_data.título.valor }}</h2>
-    <h3>{{ user_data.cidade.valor }}, {{ user_data.uf.valor }}</h3> 
-    <h3>{{ user_data.telefone.rotulo }}: {{ user_data.telefone.valor }}, {{ user_data.email.rotulo }}: {{ user_data.email.valor }}</h3> 
-    <h3>{{ user_data.linkedin.rotulo }}: <a href="{{ user_data.linkedin.valor }}" target="_blank">{{ user_data.linkedin.valor }}</a></h3>
+    {% if 'nome' in user_data and 'valor' in user_data.nome %}
+        <h1>{{ user_data.nome.valor }}</h1>
+    {% endif %}
+    {% if 'titulo' in user_data and 'valor' in user_data.titulo %}
+        <h2>{{ user_data.titulo.valor }}</h2>
+    {% endif %}
 </div>
-<div class="section"> 
+
+ <div class="">
+    <div class="" style="display: flex; justify-content: space-between;">
+        <div>
+            {% if 'cidade' in user_data and 'uf' in user_data and 'valor' in user_data.uf %}
+                <h3>{{ user_data.cidade.rotulo }}: {{ user_data.cidade.valor }}, {{ user_data.uf.valor }}</h3>
+            {% endif %}
+        </div>
+        <div> 
+         <h3>{% if 'telefone' in user_data %}{{ user_data.telefone.rotulo }}: {{ user_data.telefone.valor }}
+         {% endif %}, {% if 'email' in user_data  %}{{ user_data.email.rotulo }}: {{ user_data.email.valor }}{% endif %}</h3> 
+        </div>  
+    </div>
+    <div class="" style="display: flex; justify-content: space-between;">
+        <div>
+            {% if 'linkedin' in user_data %}
+                <h3>{{ user_data.linkedin.rotulo }}: <a href="{{ user_data.linkedin.valor }}" target="_blank">{{ user_data.linkedin.valor }}</a></h3>
+            {% endif %}
+        </div>
+        <div>
+            {% if 'url' in user_data %}
+                <h3>{{ user_data.url.rotulo }}: <a href="{{ user_data.url.valor }}" target="_blank">{{ user_data.url.valor }}</a></h3>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+    
+
+<div class="section resumo"> 
     <h2 class='resumo'>{{ resumo  }}</h2>
 </div>

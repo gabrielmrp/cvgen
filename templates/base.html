@@ -25,7 +25,7 @@
             document.getElementById('save-pdf').addEventListener('click', () => {
                 const element = document.body;
                 const opt = {
-                    margin:       [20, 0, {{margem}}, 0] ,
+                    margin:       [10, 0, {{margem}}, 0] ,
                     filename:     '{{ file_name }}',
                     image:        { type: 'jpeg', quality: 1 },
                     html2canvas:  { scale: 3},

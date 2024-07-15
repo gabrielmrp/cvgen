@@ -14,6 +14,12 @@ body {
 .no-print {
             display: none;
         }
+.center{
+    text-align: center;
+}
+.section ul li span {
+    line-height: 1.2em;
+}
 .container {
     width: 80%;
     margin: auto;
@@ -26,12 +32,18 @@ h2.resumo{
     font-weight: 400;
         font-style: italic;
     font-size: 1.8em;
+    text-align: center;
 }
 
 div.section
 {
     page-break-inside: avoid;
 }
+div.section.resumo
+{  
+margin-top: 1.5em;
+}
+
 div.controls{
     background-color: #f1f1f1; /* Apenas para visibilidade */ 
     margin: 0.1em;

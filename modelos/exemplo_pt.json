@@ -6,7 +6,20 @@
     "pasta_curriculos": "q",
     "margem": "0",
     "estrutura": {
-        "resumo": [],
+        "cabecalho": [
+            "nome",
+            "perfil",
+            "titulo",
+            "cidade",
+            "uf",
+            "telefone",
+            "linkedin",
+            "email",
+            "url"
+        ],
+        "resumo": [
+            "main"
+        ],
         "formacao": [
             "grad"
         ],
@@ -26,6 +39,9 @@
             "csap"
         ],
         "agil": [],
+        "outros": [
+            "vol"
+        ],
         "habilidades_tecnicas": [],
         "habilidades_comportamentais": [],
         "idiomas": []

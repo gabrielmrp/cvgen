@@ -11,10 +11,21 @@ pasta_curriculos
 margem
 	0
 estrutura
+	cabecalho
+		nome
+		perfil
+		titulo
+		cidade
+		uf
+		telefone
+		linkedin
+		email
+		url 
 	resumo
+		main
 	formacao
 		grad
-	experiencias 
+	experiencias
 		nov ...
 		luna
 		aqn
@@ -27,6 +38,8 @@ estrutura
 		fer
 		csap
 		agil		
+	outros
+		vol
 	habilidades_tecnicas 
 	habilidades_comportamentais
 	idiomas 
