@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currículo</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+     <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 20px;
+        }
+        .custom-divider {
+            border: solid; 
+            height: 2px;
+            border-color:   #777;
+            border-radius:  10px;
+            background-color: #777; /* Cor de fundo da linha */
+            margin: 20px 0; /* Margem vertical para espaçamento */
+        }
+
+        .section {
+            background-color: #ffffff;
+            border: 1px solid #e9ecef;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+
+        .subsection {
+            margin-bottom: 30px;
+        }
+
+        .subsection h3 {
+            color: #007bff;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .btn-enviar {
+            background-color: #28a745;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .btn-enviar:hover {
+            background-color: #218838;
+        }
+        #experiencia_id, #resumo_id_en,
+        #experiencia_alias, #resumo_alias_en{
+        pointer-events: none;
+        background: gainsboro;
+        }
+
+
+    </style>
+</head>
+<body>
+    <form method="post" action="{{ url_for('para_planilha')}}" name="dados">
+    <div class="container">
+
+
+ <div class="section">
+    <h2>Seções</h2>
+
+    <!-- Abas de Seções -->
+    <ul class="nav nav-tabs" id="secoesTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="secoes-pt-tab" data-toggle="tab" href="#secoes-pt" role="tab" aria-controls="secoes-pt" aria-selected="true">Português</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="secoes-en-tab" data-toggle="tab" href="#secoes-en" role="tab" aria-controls="secoes-en" aria-selected="false">Inglês</a>
+        </li>
+    </ul>
+
+    <!-- Conteúdo das Abas -->
+    <div class="tab-content" id="secoesTabsContent">
+        <!-- Aba Português -->
+        <div class="tab-pane fade show active" id="secoes-pt" role="tabpanel" aria-labelledby="secoes-pt-tab">
+            {% for item in data['Seções'] %}
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label for="secoes_id_pt">Id:</label>
+                    <input type="text" class="form-control" id="secoes_id_pt" name="secoes_id_{{ loop.index }}" value="{{ item.id }}">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="secoes_alias_pt">Alias:</label>
+                    <input type="text" class="form-control" id="secoes_alias_pt" name="secoes_alias_{{ loop.index }}" value="{{ item.alias }}">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="secoes_nome_pt">Nome em Português:</label>
+                    <textarea class="form-control" id="secoes_nome_pt" name="secoes_nome_pt_{{ loop.index }}" rows="4">{{ item.nome_pt }}</textarea>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Aba Inglês -->
+        <div class="tab-pane fade" id="secoes-en" role="tabpanel" aria-labelledby="secoes-en-tab">
+            {% for item in data['Seções'] %}
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label for="secoes_id_en">Id:</label>
+                    <input type="text" class="form-control" id="secoes_id_en" name="secoes_id_{{ loop.index }}" value="{{ item.id }}">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="secoes_alias_en">Alias:</label>
+                    <input type="text" class="form-control" id="secoes_alias_en" name="secoes_alias_{{ loop.index }}" value="{{ item.alias }}">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="secoes_nome_en">Nome em Inglês:</label>
+                    <textarea class="form-control" id="secoes_nome_en" name="secoes_nome_en_{{ loop.index }}" rows="4">{{ item.nome_en }}</textarea>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+<div class="section">
+    <h2>Cabeçalho</h2>
+
+    <!-- Abas do Cabeçalho -->
+    <ul class="nav nav-tabs" id="cabecalhoTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="cabecalho-pt-tab" data-toggle="tab" href="#cabecalho-pt" role="tab" aria-controls="cabecalho-pt" aria-selected="true">PT</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="cabecalho-en-tab" data-toggle="tab" href="#cabecalho-en" role="tab" aria-controls="cabecalho-en" aria-selected="false">EN</a>
+        </li>
+    </ul>
+
+    <!-- Conteúdo das Abas do Cabeçalho -->
+    <div class="tab-content" id="cabecalhoTabsContent">
+        <!-- Aba PT -->
+        <div class="tab-pane fade show active" id="cabecalho-pt" role="tabpanel" aria-labelledby="cabecalho-pt-tab">
+            <div class="form-group">
+                <div class="row mt-2">
+                    <div class="col-md-4"> 
+                        <input placeholder="Nome:" type="text" class="form-control" id="cabecalho_nome_rotulo_pt" name="cabecalho_nome_rotulo_pt" value="{{ cabecalho.nome.rotulo_pt }}">
+                    </div>
+                    <div class="col-md-8"> 
+                        <input type="text" class="form-control" id="cabecalho_nome_valor_pt" name="cabecalho_nome_valor_pt" value="{{ cabecalho.nome.valor_pt }}">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row mt-2">
+                    <div class="col-md-4"> 
+                        <input placeholder="perfil:" type="text" class="form-control" id="cabecalho_perfil_rotulo_pt" name="cabecalho_perfil_rotulo_pt" value="{{ cabecalho.perfil.rotulo_pt }}">
+                    </div>
+                    <div class="col-md-8"> 
+                        <input type="text" class="form-control" id="cabecalho_perfil_valor_pt" name="cabecalho_perfil_valor_pt" value="{{ cabecalho.perfil.valor_pt }}">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row mt-2">
+                    <div class="col-md-4"> 
+                        <input placeholder="titulo:" type="text" class="form-control" id="cabecalho_titulo_rotulo_pt" name="cabecalho_titulo_rotulo_pt" value="{{ cabecalho.titulo.rotulo_pt }}">
+                    </div>
+                    <div class="col-md-8"> 
+                        <input type="text" class="form-control" id="cabecalho_titulo_valor_pt" name="cabecalho_titulo_valor_pt" value="{{ cabecalho.titulo.valor_pt }}">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row mt-2">
+                    <div class="col-md-4"> 
+                        <input placeholder="cidade:" type="text" class="form-control" id="cabecalho_cidade_rotulo_pt" name="cabecalho_cidade_rotulo_pt" value="{{ cabecalho.cidade.rotulo_pt }}">
+                    </div>
+                    <div class="col-md-8"> 
+                        <input type="text" class="form-control" id="cabecalho_cidade_valor_pt" name="cabecalho_cidade_valor_pt" value="{{ cabecalho.cidade.valor_pt }}">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row mt-2">
+                    <div class="col-md-4"> 
+                        <input placeholder="uf:" type="text" class="form-control" id="cabecalho_uf_rotulo_pt" name="cabecalho_uf_rotulo_pt" value="{{ cabecalho.uf.rotulo_pt }}">
+                    </div>
+                    <div class="col-md-8"> 
+                        <input type="text" class="form-control" id="cabecalho_uf_valor_pt" name="cabecalho_uf_valor_pt" value="{{ cabecalho.uf.valor_pt }}">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row mt-2">
+                    <div class="col-md-4"> 
+                        <input placeholder="telefone:" type="text" class="form-control" id="cabecalho_telefone_rotulo_pt" name="cabecalho_telefone_rotulo_pt" value="{{ cabecalho.telefone.rotulo_pt }}">
+                    </div>
+                    <div class="col-md-8"> 
+                        <input type="text" class="form-control" id="cabecalho_telefone_valor_pt" name="cabecalho_telefone_valor_pt" value="{{ cabecalho.telefone.valor_pt }}">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="row mt-2">
+                    <div class="col-md-4"> 
+                        <input placeholder="linkedin:" type="text" class="form-control" id="cabecalho_linkedin_rotulo_pt" name="cabecalho_linkedin_rotulo_pt" value="{{ cabecalho.linkedin.rotulo_pt }}">
+                    </div>
+                    <div class="col-md-8"> 
+                        <input type="text" class="form-control" id="cabecalho_linkedin_valor_pt" name="cabecalho_linkedin_valor_pt" value="{{ cabecalho.linkedin.valor_pt }}">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row mt-2">
+                    <div class="col-md-4"> 
+                        <input placeholder="email:" type="text" class="form-control" id="cabecalho_email_rotulo_pt" name="cabecalho_email_rotulo_pt" value="{{ cabecalho.email.rotulo_pt }}">
+                    </div>
+                    <div class="col-md-8"> 
+                        <input type="text" class="form-control" id="cabecalho_email_valor_pt" name="cabecalho_email_valor_pt" value="{{ cabecalho.email.valor_pt }}">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row mt-2">
+                    <div class="col-md-4"> 
+                        <input placeholder="url:" type="text" class="form-control" id="cabecalho_url_rotulo_pt" name="cabecalho_url_rotulo_pt" value="{{ cabecalho.url.rotulo_pt }}">
+                    </div>
+                    <div class="col-md-8"> 
+                        <input type="text" class="form-control" id="cabecalho_url_valor_pt" name="cabecalho_url_valor_pt" value="{{ cabecalho.url.valor_pt }}">
+                    </div>
+                </div>
+            </div> 
+        </div>
+
+        <!-- Aba EN -->
+        <div class="tab-pane fade" id="cabecalho-en" role="tabpanel" aria-labelledby="cabecalho-en-tab">
+             
+            <div class="form-group">
+                <div class="row mt-2">
+                    <div class="col-md-4"> 
+                        <input placeholder="Nome:" type="text" class="form-control" id="cabecalho_nome_rotulo_en" name="cabecalho_nome_rotulo_en" value="{{ cabecalho.nome.rotulo_en }}">
+                    </div>
+                    <div class="col-md-8"> 
+                        <input type="text" class="form-control" id="cabecalho_nome_valor_en" name="cabecalho_nome_valor_en" value="{{ cabecalho.nome.valor_en }}">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row mt-2">
+                    <div class="col-md-4"> 
+                        <input placeholder="perfil:" type="text" class="form-control" id="cabecalho_perfil_rotulo_en" name="cabecalho_perfil_rotulo_en" value="{{ cabecalho.perfil.rotulo_en }}">
+                    </div>
+                    <div class="col-md-8"> 
+                        <input type="text" class="form-control" id="cabecalho_perfil_valor_en" name="cabecalho_perfil_valor_en" value="{{ cabecalho.perfil.valor_en }}">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row mt-2">
+                    <div class="col-md-4"> 
+                        <input placeholder="titulo:" type="text" class="form-control" id="cabecalho_titulo_rotulo_en" name="cabecalho_titulo_rotulo_en" value="{{ cabecalho.titulo.rotulo_en }}">
+                    </div>
+                    <div class="col-md-8"> 
+                        <input type="text" class="form-control" id="cabecalho_titulo_valor_en" name="cabecalho_titulo_valor_en" value="{{ cabecalho.titulo.valor_en }}">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row mt-2">
+                    <div class="col-md-4"> 
+                        <input placeholder="cidade:" type="text" class="form-control" id="cabecalho_cidade_rotulo_en" name="cabecalho_cidade_rotulo_en" value="{{ cabecalho.cidade.rotulo_en }}">
+                    </div>
+                    <div class="col-md-8"> 
+                        <input type="text" class="form-control" id="cabecalho_cidade_valor_en" name="cabecalho_cidade_valor_en" value="{{ cabecalho.cidade.valor_en }}">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row mt-2">
+                    <div class="col-md-4"> 
+                        <input placeholder="uf:" type="text" class="form-control" id="cabecalho_uf_rotulo_en" name="cabecalho_uf_rotulo_en" value="{{ cabecalho.uf.rotulo_en }}">
+                    </div>
+                    <div class="col-md-8"> 
+                        <input type="text" class="form-control" id="cabecalho_uf_valor_en" name="cabecalho_uf_valor_en" value="{{ cabecalho.uf.valor_en }}">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row mt-2">
+                    <div class="col-md-4"> 
+                        <input placeholder="telefone:" type="text" class="form-control" id="cabecalho_telefone_rotulo_en" name="cabecalho_telefone_rotulo_en" value="{{ cabecalho.telefone.rotulo_en }}">
+                    </div>
+                    <div class="col-md-8"> 
+                        <input type="text" class="form-control" id="cabecalho_telefone_valor_en" name="cabecalho_telefone_valor_en" value="{{ cabecalho.telefone.valor_en }}">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row mt-2">
+                    <div class="col-md-4"> 
+                        <input placeholder="linkedin:" type="text" class="form-control" id="cabecalho_linkedin_rotulo_en" name="cabecalho_linkedin_rotulo_en" value="{{ cabecalho.linkedin.rotulo_en }}">
+                    </div>
+                    <div class="col-md-8"> 
+                        <input type="text" class="form-control" id="cabecalho_linkedin_valor_en" name="cabecalho_linkedin_valor_en" value="{{ cabecalho.linkedin.valor_en }}">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row mt-2">
+                    <div class="col-md-4"> 
+                        <input placeholder="email:" type="text" class="form-control" id="cabecalho_email_rotulo_en" name="cabecalho_email_rotulo_en" value="{{ cabecalho.email.rotulo_en }}">
+                    </div>
+                    <div class="col-md-8"> 
+                        <input type="text" class="form-control" id="cabecalho_email_valor_en" name="cabecalho_email_valor_en" value="{{ cabecalho.email.valor_en }}">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="row mt-2">
+                    <div class="col-md-4"> 
+                        <input placeholder="url:" type="text" class="form-control" id="cabecalho_url_rotulo_en" name="cabecalho_url_rotulo_en" value="{{ cabecalho.url.rotulo_en }}">
+                    </div>
+                    <div class="col-md-8"> 
+                        <input type="text" class="form-control" id="cabecalho_url_valor_en" name="cabecalho_url_valor_en" value="{{ cabecalho.url.valor_en }}">
+                    </div>
+                </div>
+            </div>
+            
+         
+        </div>
+    </div>
+</div>
+
+       <div class="section">
+            <h2>Resumo</h2>
+
+            <!-- Abas de Resumo -->
+            <ul class="nav nav-tabs" id="resumoTabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="resumo-pt-tab" data-toggle="tab" href="#resumo-pt" role="tab" aria-controls="resumo-pt" aria-selected="true">Português</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="resumo-en-tab" data-toggle="tab" href="#resumo-en" role="tab" aria-controls="resumo-en" aria-selected="false">Inglês</a>
+                </li>
+            </ul>
+
+            <!-- Conteúdo das Abas -->
+            <div class="tab-content" id="resumoTabsContent">
+                <!-- Aba Português -->
+                {% for item in data['Resumo'] %}
+                <div class="tab-pane fade show active" id="resumo-pt" role="tabpanel" aria-labelledby="resumo-pt-tab">
+                    <div class="form-group">
+                        <label for="resumo_id_pt">Id:</label>
+                        <input type="text" class="form-control" id="resumo_id_pt" name="resumo_id_{{loop.index}}" value="{{ item.id }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="resumo_alias_pt">Alias:</label>
+                        <input type="text" class="form-control" id="resumo_alias_pt" name="resumo_alias_{{loop.index}}" value="{{ item.alias }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="resumo_texto_pt">Texto em Português:</label>
+                        <textarea class="form-control" id="resumo_texto_pt" name="resumo_texto_pt_{{loop.index}}" rows="4">{{ item.texto_pt }}</textarea>
+                    </div>
+                </div>
+                  
+
+                <!-- Aba Inglês -->
+                
+                <div class="tab-pane fade" id="resumo-en" role="tabpanel" aria-labelledby="resumo-en-tab">
+                    <div class="form-group">
+                        <label for="resumo_id_en">Id:</label>
+                        <input type="text" class="form-control" id="resumo_id_pt" name="resumo_id_{{loop.index}}" value="{{ item.id }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="resumo_alias_en">Alias:</label>
+                        <input type="text" class="form-control" id="resumo_alias" name="resumo_alias_{{loop.index}}" value="{{ item.alias }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="resumo_texto_en">Texto em Inglês:</label>
+                        <textarea class="form-control" id="resumo_texto_en" name="resumo_texto_en_{{loop.index}}" rows="4">{{ item.texto_en }}</textarea>
+                    </div>
+                </div>
+                 {% if data['Resumo'] | length > 1 %}
+                 <hr class="custom-divider">
+                 {% endif %}
+                 {% endfor %}
+            </div>
+        </div>
+
+
+
+        <div class="section">
+            <h2>Experiências</h2>
+
+            <!-- Abas de Experiências -->
+            <ul class="nav nav-tabs" id="experienciasTabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="experiencias-pt-tab" data-toggle="tab" href="#experiencias-pt" role="tab" aria-controls="experiencias-pt" aria-selected="true">Português</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="experiencias-en-tab" data-toggle="tab" href="#experiencias-en" role="tab" aria-controls="experiencias-en" aria-selected="false">Inglês</a>
+                </li>
+            </ul>
+
+            <!-- Conteúdo das Abas -->
+            <div class="tab-content" id="experienciasTabsContent">
+                <!-- Aba Português -->
+                <div class="tab-pane fade show active" id="experiencias-pt" role="tabpanel" aria-labelledby="experiencias-pt-tab">
+                    {% for item in data['Experiências'] %}
+                    <div class="form-group">
+                        <label for="experiencia_id_{{loop.index}}">ID:</label>
+                        <input type="text" class="form-control" id="experiencia_id_{{loop.index}}" name="experiencia_id_{{loop.index}}" value="{{ item['id'] }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="experiencia_alias_{{loop.index}}">Alias:</label>
+                        <input type="text" class="form-control" id="experiencia_alias_{{loop.index}}" name="experiencia_alias_{{loop.index}}" value="{{ item['alias'] }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="experiencia_cargo_pt_{{loop.index}}">Cargo:</label>
+                        <input type="text" class="form-control" id="experiencia_cargo_pt_{{loop.index}}" name="experiencia_cargo_pt_{{loop.index}}" value="{{ item['cargo_pt'] }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="experiencia_empresa_pt_{{loop.index}}">Empresa:</label>
+                        <input type="text" class="form-control" id="experiencia_empresa_pt_{{loop.index}}" name="experiencia_empresa_pt_{{loop.index}}" value="{{ item['empresa_pt'] }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="experiencia_duracao_pt_{{loop.index}}">Duração:</label>
+                        <input type="text" class="form-control" id="experiencia_duracao_pt_{{loop.index}}" name="experiencia_duracao_pt_{{loop.index}}" value="{{ item['duracao_pt'] }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="experiencia_descricao_pt_{{loop.index}}">Descrição:</label>
+                        <textarea class="form-control" id="experiencia_descricao_pt_{{loop.index}}" name="experiencia_descricao_pt_{{loop.index}}" rows="4">{{ item['descricao_pt'] }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="experiencia_detalhe1_pt_{{loop.index}}">Detalhe 1:</label>
+                        <input type="text" class="form-control" id="experiencia_detalhe1_pt_{{loop.index}}" name="experiencia_detalhe1_pt_{{loop.index}}" value="{{ item['detalhe1_pt'] }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="experiencia_detalhe2_pt_{{loop.index}}">Detalhe 2:</label>
+                        <input type="text" class="form-control" id="experiencia_detalhe2_pt_{{loop.index}}" name="experiencia_detalhe2_pt_{{loop.index}}" value="{{ item['detalhe2_pt'] }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="experiencia_detalhe3_pt_{{loop.index}}">Detalhe 3:</label>
+                        <input type="text" class="form-control" id="experiencia_detalhe3_pt_{{loop.index}}" name="experiencia_detalhe3_pt_{{loop.index}}" value="{{ item['detalhe3_pt'] }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="experiencia_detalhe4_pt_{{loop.index}}">Detalhe 4:</label>
+                        <input type="text" class="form-control" id="experiencia_detalhe4_pt_{{loop.index}}" name="experiencia_detalhe4_pt_{{loop.index}}" value="{{ item['detalhe4_pt'] }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="experiencia_detalhe5_pt_{{loop.index}}">Detalhe 5:</label>
+                        <input type="text" class="form-control" id="experiencia_detalhe5_pt_{{loop.index}}" name="experiencia_detalhe5_pt_{{loop.index}}" value="{{ item['detalhe5_pt'] }}">
+                    </div>
+                    <hr class="custom-divider">
+                    {% endfor %}
+                </div>
+
+                <!-- Aba Inglês -->
+                <div class="tab-pane fade" id="experiencias-en" role="tabpanel" aria-labelledby="experiencias-en-tab">
+                    {% for item in data['Experiências'] %}
+                    <div class="form-group">
+                        <label for="experiencia_id_{{loop.index}}">ID:</label>
+                        <input type="text" class="form-control" id="experiencia_id_{{loop.index}}" name="experiencia_id_{{loop.index}}" value="{{ item['id'] }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="experiencia_alias_{{loop.index}}">Alias:</label>
+                        <input type="text" class="form-control" id="experiencia_alias_{{loop.index}}" name="experiencia_alias_{{loop.index}}" value="{{ item['alias'] }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="experiencia_cargo_en_{{loop.index}}">Cargo:</label>
+                        <input type="text" class="form-control" id="experiencia_cargo_en_{{loop.index}}" name="experiencia_cargo_en_{{loop.index}}" value="{{ item['cargo_en'] }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="experiencia_empresa_en_{{loop.index}}">Empresa:</label>
+                        <input type="text" class="form-control" id="experiencia_empresa_en_{{loop.index}}" name="experiencia_empresa_en_{{loop.index}}" value="{{ item['empresa_en'] }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="experiencia_duracao_en_{{loop.index}}">Duração:</label>
+                        <input type="text" class="form-control" id="experiencia_duracao_en_{{loop.index}}" name="experiencia_duracao_en_{{loop.index}}" value="{{ item['duracao_en'] }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="experiencia_descricao_en_{{loop.index}}">Descrição:</label>
+                        <textarea class="form-control" id="experiencia_descricao_en_{{loop.index}}" name="experiencia_descricao_en_{{loop.index}}" rows="4">{{ item['descricao_en'] }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="experiencia_detalhe1_en_{{loop.index}}">Detalhe 1:</label>
+                        <input type="text" class="form-control" id="experiencia_detalhe1_en_{{loop.index}}" name="experiencia_detalhe1_en_{{loop.index}}" value="{{ item['detalhe1_en'] }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="experiencia_detalhe2_en_{{loop.index}}">Detalhe 2:</label>
+                        <input type="text" class="form-control" id="experiencia_detalhe2_en_{{loop.index}}" name="experiencia_detalhe2_en_{{loop.index}}" value="{{ item['detalhe2_en'] }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="experiencia_detalhe3_en_{{loop.index}}">Detalhe 3:</label>
+                        <input type="text" class="form-control" id="experiencia_detalhe3_en_{{loop.index}}" name="experiencia_detalhe3_en_{{loop.index}}" value="{{ item['detalhe3_en'] }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="experiencia_detalhe4_en_{{loop.index}}">Detalhe 4:</label>
+                        <input type="text" class="form-control" id="experiencia_detalhe4_en_{{loop.index}}" name="experiencia_detalhe4_en_{{loop.index}}" value="{{ item['detalhe4_en'] }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="experiencia_detalhe5_en_{{loop.index}}">Detalhe 5:</label>
+                        <input type="text" class="form-control" id="experiencia_detalhe5_en_{{loop.index}}" name="experiencia_detalhe5_en_{{loop.index}}" value="{{ item['detalhe5_en'] }}">
+                    </div>
+                    <hr class="custom-divider">
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+        <div class="section">
+            <h2>Formações</h2>
+
+            <!-- Abas de Formações -->
+            <ul class="nav nav-tabs" id="formacoesTabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="formacoes-pt-tab" data-toggle="tab" href="#formacoes-pt" role="tab" aria-controls="formacoes-pt" aria-selected="true">Português</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="formacoes-en-tab" data-toggle="tab" href="#formacoes-en" role="tab" aria-controls="formacoes-en" aria-selected="false">Inglês</a>
+                </li>
+            </ul>
+
+            <!-- Conteúdo das Abas -->
+            <div class="tab-content" id="formacoesTabsContent">
+                <!-- Aba Português -->
+                <div class="tab-pane fade show active" id="formacoes-pt" role="tabpanel" aria-labelledby="formacoes-pt-tab">
+                    {% for formacao_pt in data['Formações']%}
+                    <div class="form-group">
+                        <label for="formacao_pt_{{loop.index}}">ID:</label>
+                        <input type="text" class="form-control" id="formacao_pt_{{loop.index}}" name="formacao_id_{{loop.index}}" value="{{ formacao_pt.id }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="formacao_pt_{{loop.index}}">Alias:</label>
+                        <input type="text" class="form-control" id="formacao_pt_{{loop.index}}" name="formacao_alias_{{loop.index}}" value="{{ formacao_pt.alias }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="formacao_curso_pt_{{loop.index}}">Curso:</label>
+                        <input type="text" class="form-control" id="formacao_curso_pt_{{loop.index}}" name="formacao_curso_pt_{{loop.index}}" value="{{ formacao_pt.curso_pt }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="formacao_instituicao_pt_{{loop.index}}">Instituição:</label>
+                        <input type="text" class="form-control" id="formacao_instituicao_pt_{{loop.index}}" name="formacao_instituicao_pt_{{loop.index}}" value="{{ formacao_pt.instituicao_pt }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="formacao_duracao_pt_{{loop.index}}">Duração:</label>
+                        <input type="text" class="form-control" id="formacao_duracao_pt_{{loop.index}}" name="formacao_duracao_pt_{{loop.index}}" value="{{ formacao_pt.duracao_pt }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="formacao_descricao_pt_{{loop.index}}">Descrição:</label>
+                        <textarea class="form-control" id="formacao_descricao_pt_{{loop.index}}" name="formacao_descricao_pt_{{loop.index}}" rows="4">{{ formacao_pt.descricao_pt }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="formacao_detalhe1_pt_{{loop.index}}">Detalhe 1:</label>
+                        <input type="text" class="form-control" id="formacao_detalhe1_pt_{{loop.index}}" name="formacao_detalhe1_pt_{{loop.index}}" value="{{ formacao_pt.detalhe1_pt }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="formacao_detalhe2_pt_{{loop.index}}">Detalhe 2:</label>
+                        <input type="text" class="form-control" id="formacao_detalhe2_pt_{{loop.index}}" name="formacao_detalhe2_pt_{{loop.index}}" value="{{ formacao_pt.detalhe2_pt }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="formacao_detalhe3_pt_{{loop.index}}">Detalhe 3:</label>
+                        <input type="text" class="form-control" id="formacao_detalhe3_pt_{{loop.index}}" name="formacao_detalhe3_pt_{{loop.index}}" value="{{ formacao_pt.detalhe3_pt }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="formacao_detalhe4_pt_{{loop.index}}">Detalhe 4:</label>
+                        <input type="text" class="form-control" id="formacao_detalhe4_pt_{{loop.index}}" name="formacao_detalhe4_pt_{{loop.index}}" value="{{ formacao_pt.detalhe4_pt }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="formacao_detalhe5_pt_{{loop.index}}">Detalhe 5:</label>
+                        <input type="text" class="form-control" id="formacao_detalhe5_pt_{{loop.index}}" name="formacao_detalhe5_pt_{{loop.index}}" value="{{ formacao_pt.detalhe5_pt }}">
+                    </div>
+                    <hr class="custom-divider">
+                    {% endfor %}
+                </div>
+
+                <!-- Aba Inglês -->
+                <div class="tab-pane fade" id="formacoes-en" role="tabpanel" aria-labelledby="formacoes-en-tab">
+                    {% for formacao_en in data['Formações'] %}
+                    <div class="form-group">
+                        <label for="formacao_en_{{loop.index}}">ID:</label>
+                        <input type="text" class="form-control" id="formacao_en_{{loop.index}}" name="formacao_id_{{loop.index}}" value="{{ formacao_en.id }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="formacao_alias_{{loop.index}}">Alias:</label>
+                        <input type="text" class="form-control" id="formacao_alias_{{loop.index}}" name="formacao_alias_{{loop.index}}" value="{{ formacao_en.alias }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="formacao_curso_en_{{loop.index}}">Curso:</label>
+                        <input type="text" class="form-control" id="formacao_curso_en_{{loop.index}}" name="formacao_curso_en_{{loop.index}}" value="{{ formacao_en.curso_en }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="formacao_instituicao_en_{{loop.index}}">Instituição:</label>
+                        <input type="text" class="form-control" id="formacao_instituicao_en_{{loop.index}}" name="formacao_instituicao_en_{{loop.index}}" value="{{ formacao_en.instituicao_en }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="formacao_duracao_en_{{loop.index}}">Duração:</label>
+                        <input type="text" class="form-control" id="formacao_duracao_en_{{loop.index}}" name="formacao_duracao_en_{{loop.index}}" value="{{ formacao_en.duracao_en }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="formacao_descricao_en_{{loop.index}}">Descrição:</label>
+                        <textarea class="form-control" id="formacao_descricao_en_{{loop.index}}" name="formacao_descricao_en_{{loop.index}}" rows="4">{{ formacao_en.descricao_en }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="formacao_detalhe1_en_{{loop.index}}">Detalhe 1:</label>
+                        <input type="text" class="form-control" id="formacao_detalhe1_en_{{loop.index}}" name="formacao_detalhe1_en_{{loop.index}}" value="{{ formacao_en.detalhe1_en }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="formacao_detalhe2_en_{{loop.index}}">Detalhe 2:</label>
+                        <input type="text" class="form-control" id="formacao_detalhe2_en_{{loop.index}}" name="formacao_detalhe2_en_{{loop.index}}" value="{{ formacao_en.detalhe2_en }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="formacao_detalhe3_en_{{loop.index}}">Detalhe 3:</label>
+                        <input type="text" class="form-control" id="formacao_detalhe3_en_{{loop.index}}" name="formacao_detalhe3_en_{{loop.index}}" value="{{ formacao_en.detalhe3_en }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="formacao_detalhe4_en_{{loop.index}}">Detalhe 4:</label>
+                        <input type="text" class="form-control" id="formacao_detalhe4_en_{{loop.index}}" name="formacao_detalhe4_en_{{loop.index}}" value="{{ formacao_en.detalhe4_en }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="formacao_detalhe5_en_{{loop.index}}">Detalhe 5:</label>
+                        <input type="text" class="form-control" id="formacao_detalhe5_en_{{loop.index}}" name="formacao_detalhe5_en_{{loop.index}}" value="{{ formacao_en.detalhe5_en }}">
+                    </div>
+                    <hr class="custom-divider">
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+
+
+<div class="section">
+    <h2>Habilidades</h2>
+
+    <!-- Nav Tabs -->
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="portugues-tab" data-toggle="tab" href="#portugues" role="tab" aria-controls="portugues" aria-selected="true">Português</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="ingles-tab" data-toggle="tab" href="#ingles" role="tab" aria-controls="ingles" aria-selected="false">Inglês</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <!-- Tab Pane Português -->
+        <div class="tab-pane fade show active" id="portugues" role="tabpanel" aria-labelledby="portugues-tab">
+            <!-- Seção Técnica -->
+            <div class="subsection">
+                <h3>Técnica</h3>
+                {% for tecnica in habilidades['técnica'] %}
+                <div class="row">
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_tecnica_id_{{ loop.index }}">ID:</label>
+                            <input type="text" class="form-control" id="habilidade_tecnica_id_{{ loop.index }}" name="habilidade_tecnica_id_{{ loop.index }}" value="{{ tecnica.id }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_tecnica_id_{{ loop.index }}" name="habilidade_tecnica_id_{{ loop.index }}" value="{{ tecnica.id }}">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_tecnica_nome_pt_{{ loop.index }}">Nome (PT):</label>
+                            <input type="text" class="form-control" id="habilidade_tecnica_nome_pt_{{ loop.index }}" name="habilidade_tecnica_nome_pt_{{ loop.index }}" value="{{ tecnica.nome_pt }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_tecnica_nome_pt_{{ loop.index }}" name="habilidade_tecnica_nome_pt_{{ loop.index }}" value="{{ tecnica.nome_pt }}">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_tecnica_classe_pt_{{ loop.index }}">Classe (PT):</label>
+                            <input type="text" class="form-control" id="habilidade_tecnica_classe_pt_{{ loop.index }}" name="habilidade_tecnica_classe_pt_{{ loop.index }}" value="{{ tecnica.classe_pt }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_tecnica_classe_pt_{{ loop.index }}" name="habilidade_tecnica_classe_pt_{{ loop.index }}" value="{{ tecnica.classe_pt }}">
+                        </div>
+                        {% endif %}
+                    </div> 
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_tecnica_alias_{{ loop.index }}">Alias:</label>
+                            <input type="text" class="form-control" id="habilidade_tecnica_alias_{{ loop.index }}" name="habilidade_tecnica_alias_{{ loop.index }}" value="{{ tecnica.alias }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_tecnica_alias_{{ loop.index }}" name="habilidade_tecnica_alias_{{ loop.index }}" value="{{ tecnica.alias }}">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_tecnica_grupo_{{ loop.index }}">Grupo:</label>
+                            <input type="text" class="form-control" id="habilidade_tecnica_grupo_{{ loop.index }}" name="habilidade_tecnica_grupo_{{ loop.index }}" value="{{ tecnica.grupo }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_tecnica_grupo_{{ loop.index }}" name="habilidade_tecnica_grupo_{{ loop.index }}" value="{{ tecnica.grupo }}">
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Seção Comportamental -->
+            <div class="subsection">
+                <h3>Comportamental</h3>
+                {% for comportamental in habilidades['comportamental'] %}
+                <div class="row">
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_comportamental_id_{{ loop.index }}">ID:</label>
+                            <input type="text" class="form-control" id="habilidade_comportamental_id_{{ loop.index }}" name="habilidade_comportamental_id_{{ loop.index }}" value="{{ comportamental.id }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_comportamental_id_{{ loop.index }}" name="habilidade_comportamental_id_{{ loop.index }}" value="{{ comportamental.id }}">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_comportamental_nome_pt_{{ loop.index }}">Nome (PT):</label>
+                            <input type="text" class="form-control" id="habilidade_comportamental_nome_pt_{{ loop.index }}" name="habilidade_comportamental_nome_pt_{{ loop.index }}" value="{{ comportamental.nome_pt }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_comportamental_nome_pt_{{ loop.index }}" name="habilidade_comportamental_nome_pt_{{ loop.index }}" value="{{ comportamental.nome_pt }}">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_comportamental_classe_pt_{{ loop.index }}">Classe (PT):</label>
+                            <input type="text" class="form-control" id="habilidade_comportamental_classe_pt_{{ loop.index }}" name="habilidade_comportamental_classe_pt_{{ loop.index }}" value="{{ comportamental.classe_pt }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_comportamental_classe_pt_{{ loop.index }}" name="habilidade_comportamental_classe_pt_{{ loop.index }}" value="{{ comportamental.classe_pt }}">
+                        </div>
+                        {% endif %}
+                    </div> 
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_comportamental_alias_{{ loop.index }}">Alias:</label>
+                            <input type="text" class="form-control" id="habilidade_comportamental_alias_{{ loop.index }}" name="habilidade_comportamental_alias_{{ loop.index }}" value="{{ comportamental.alias }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_comportamental_alias_{{ loop.index }}" name="habilidade_comportamental_alias_{{ loop.index }}" value="{{ comportamental.alias }}">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_comportamental_grupo_{{ loop.index }}">Grupo:</label>
+                            <input type="text" class="form-control" id="habilidade_comportamental_grupo_{{ loop.index }}" name="habilidade_comportamental_grupo_{{ loop.index }}" value="{{ comportamental.grupo }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_comportamental_grupo_{{ loop.index }}" name="habilidade_comportamental_grupo_{{ loop.index }}" value="{{ comportamental.grupo }}">
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Seção Idioma -->
+            <div class="subsection">
+                <h3>Idioma</h3>
+                {% for idioma in habilidades['idioma'] %}
+                <div class="row">
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_idioma_id_{{ loop.index }}">ID:</label>
+                            <input type="text" class="form-control" id="habilidade_idioma_id_{{ loop.index }}" name="habilidade_idioma_id_{{ loop.index }}" value="{{ idioma.id }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_idioma_id_{{ loop.index }}" name="habilidade_idioma_id_{{ loop.index }}" value="{{ idioma.id }}">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_idioma_nome_pt_{{ loop.index }}">Nome (PT):</label>
+                            <input type="text" class="form-control" id="habilidade_idioma_nome_pt_{{ loop.index }}" name="habilidade_idioma_nome_pt_{{ loop.index }}" value="{{ idioma.nome_pt }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_idioma_nome_pt_{{ loop.index }}" name="habilidade_idioma_nome_pt_{{ loop.index }}" value="{{ idioma.nome_pt }}">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_idioma_classe_pt_{{ loop.index }}">Classe (PT):</label>
+                            <input type="text" class="form-control" id="habilidade_idioma_classe_pt_{{ loop.index }}" name="habilidade_idioma_classe_pt_{{ loop.index }}" value="{{ idioma.classe_pt }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_idioma_classe_pt_{{ loop.index }}" name="habilidade_idioma_classe_pt_{{ loop.index }}" value="{{ idioma.classe_pt }}">
+                        </div>
+                        {% endif %}
+                    </div> 
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_idioma_alias_{{ loop.index }}">Alias:</label>
+                            <input type="text" class="form-control" id="habilidade_idioma_alias_{{ loop.index }}" name="habilidade_idioma_alias_{{ loop.index }}" value="{{ idioma.alias }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_idioma_alias_{{ loop.index }}" name="habilidade_idioma_alias_{{ loop.index }}" value="{{ idioma.alias }}">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_idioma_grupo_{{ loop.index }}">Grupo:</label>
+                            <input type="text" class="form-control" id="habilidade_idioma_grupo_{{ loop.index }}" name="habilidade_idioma_grupo_{{ loop.index }}" value="{{ idioma.grupo }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_idioma_grupo_{{ loop.index }}" name="habilidade_idioma_grupo_{{ loop.index }}" value="{{ idioma.grupo }}">
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Tab Pane Inglês -->
+        <div class="tab-pane fade" id="ingles" role="tabpanel" aria-labelledby="ingles-tab">
+            <!-- Seção Técnica -->
+            <div class="subsection">
+                <h3>Technical</h3>
+                {% for tecnica in habilidades['técnica'] %}
+                <div class="row">
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_tecnica_id_{{ loop.index }}">ID:</label>
+                            <input type="text" class="form-control" id="habilidade_tecnica_id_{{ loop.index }}" name="habilidade_tecnica_id_{{ loop.index }}" value="{{ tecnica.id }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_tecnica_id_{{ loop.index }}" name="habilidade_tecnica_id_{{ loop.index }}" value="{{ tecnica.id }}">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_tecnica_nome_en_{{ loop.index }}">Name (EN):</label>
+                            <input type="text" class="form-control" id="habilidade_tecnica_nome_en_{{ loop.index }}" name="habilidade_tecnica_nome_en_{{ loop.index }}" value="{{ tecnica.nome_en }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_tecnica_nome_en_{{ loop.index }}" name="habilidade_tecnica_nome_en_{{ loop.index }}" value="{{ tecnica.nome_en }}">
+                        </div>
+                        {% endif %}
+                    </div> 
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_tecnica_classe_en_{{ loop.index }}">Class (EN):</label>
+                            <input type="text" class="form-control" id="habilidade_tecnica_classe_en_{{ loop.index }}" name="habilidade_tecnica_classe_en_{{ loop.index }}" value="{{ tecnica.classe_en }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_tecnica_classe_en_{{ loop.index }}" name="habilidade_tecnica_classe_en_{{ loop.index }}" value="{{ tecnica.classe_en }}">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_tecnica_alias_{{ loop.index }}">Alias:</label>
+                            <input type="text" class="form-control" id="habilidade_tecnica_alias_{{ loop.index }}" name="habilidade_tecnica_alias_{{ loop.index }}" value="{{ tecnica.alias }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_tecnica_alias_{{ loop.index }}" name="habilidade_tecnica_alias_{{ loop.index }}" value="{{ tecnica.alias }}">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_tecnica_grupo_{{ loop.index }}">Group:</label>
+                            <input type="text" class="form-control" id="habilidade_tecnica_grupo_{{ loop.index }}" name="habilidade_tecnica_grupo_{{ loop.index }}" value="{{ tecnica.grupo }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_tecnica_grupo_{{ loop.index }}" name="habilidade_tecnica_grupo_{{ loop.index }}" value="{{ tecnica.grupo }}">
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Seção Comportamental -->
+            <div class="subsection">
+                <h3>Behavioral</h3>
+                {% for comportamental in habilidades['comportamental'] %}
+                <div class="row">
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_comportamental_id_{{ loop.index }}">ID:</label>
+                            <input type="text" class="form-control" id="habilidade_comportamental_id_{{ loop.index }}" name="habilidade_comportamental_id_{{ loop.index }}" value="{{ comportamental.id }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_comportamental_id_{{ loop.index }}" name="habilidade_comportamental_id_{{ loop.index }}" value="{{ comportamental.id }}">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_comportamental_nome_en_{{ loop.index }}">Name (EN):</label>
+                            <input type="text" class="form-control" id="habilidade_comportamental_nome_en_{{ loop.index }}" name="habilidade_comportamental_nome_en_{{ loop.index }}" value="{{ comportamental.nome_en }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_comportamental_nome_en_{{ loop.index }}" name="habilidade_comportamental_nome_en_{{ loop.index }}" value="{{ comportamental.nome_en }}">
+                        </div>
+                        {% endif %}
+                    </div> 
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_comportamental_classe_en_{{ loop.index }}">Class (EN):</label>
+                            <input type="text" class="form-control" id="habilidade_comportamental_classe_en_{{ loop.index }}" name="habilidade_comportamental_classe_en_{{ loop.index }}" value="{{ comportamental.classe_en }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_comportamental_classe_en_{{ loop.index }}" name="habilidade_comportamental_classe_en_{{ loop.index }}" value="{{ comportamental.classe_en }}">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_comportamental_alias_{{ loop.index }}">Alias:</label>
+                            <input type="text" class="form-control" id="habilidade_comportamental_alias_{{ loop.index }}" name="habilidade_comportamental_alias_{{ loop.index }}" value="{{ comportamental.alias }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_comportamental_alias_{{ loop.index }}" name="habilidade_comportamental_alias_{{ loop.index }}" value="{{ comportamental.alias }}">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_comportamental_grupo_{{ loop.index }}">Group:</label>
+                            <input type="text" class="form-control" id="habilidade_comportamental_grupo_{{ loop.index }}" name="habilidade_comportamental_grupo_{{ loop.index }}" value="{{ comportamental.grupo }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_comportamental_grupo_{{ loop.index }}" name="habilidade_comportamental_grupo_{{ loop.index }}" value="{{ comportamental.grupo }}">
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Seção Idioma -->
+            <div class="subsection">
+                <h3>Language</h3>
+                {% for idioma in habilidades['idioma'] %}
+                <div class="row">
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_idioma_id_{{ loop.index }}">ID:</label>
+                            <input type="text" class="form-control" id="habilidade_idioma_id_{{ loop.index }}" name="habilidade_idioma_id_{{ loop.index }}" value="{{ idioma.id }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_idioma_id_{{ loop.index }}" name="habilidade_idioma_id_{{ loop.index }}" value="{{ idioma.id }}">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_idioma_nome_en_{{ loop.index }}">Name (EN):</label>
+                            <input type="text" class="form-control" id="habilidade_idioma_nome_en_{{ loop.index }}" name="habilidade_idioma_nome_en_{{ loop.index }}" value="{{ idioma.nome_en }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_idioma_nome_en_{{ loop.index }}" name="habilidade_idioma_nome_en_{{ loop.index }}" value="{{ idioma.nome_en }}">
+                        </div>
+                        {% endif %}
+                    </div> 
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_idioma_classe_en_{{ loop.index }}">Class (EN):</label>
+                            <input type="text" class="form-control" id="habilidade_idioma_classe_en_{{ loop.index }}" name="habilidade_idioma_classe_en_{{ loop.index }}" value="{{ idioma.classe_en }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_idioma_classe_en_{{ loop.index }}" name="habilidade_idioma_classe_en_{{ loop.index }}" value="{{ idioma.classe_en }}">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_idioma_alias_{{ loop.index }}">Alias:</label>
+                            <input type="text" class="form-control" id="habilidade_idioma_alias_{{ loop.index }}" name="habilidade_idioma_alias_{{ loop.index }}" value="{{ idioma.alias }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_idioma_alias_{{ loop.index }}" name="habilidade_idioma_alias_{{ loop.index }}" value="{{ idioma.alias }}">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-2">
+                        {% if loop.first %}
+                        <div class="form-group">
+                            <label for="habilidade_idioma_grupo_{{ loop.index }}">Group:</label>
+                            <input type="text" class="form-control" id="habilidade_idioma_grupo_{{ loop.index }}" name="habilidade_idioma_grupo_{{ loop.index }}" value="{{ idioma.grupo }}">
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="habilidade_idioma_grupo_{{ loop.index }}" name="habilidade_idioma_grupo_{{ loop.index }}" value="{{ idioma.grupo }}">
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+
+    
+
+<div class="section odd">
+            <h2>Outros</h2>
+
+ <ul class="nav nav-tabs" id="myTabs" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="portugues-tab" data-toggle="tab" href="#outros-portugues" role="tab" aria-controls="portugues" aria-selected="true">Português</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="ingles-tab" data-toggle="tab" href="#outros-ingles" role="tab" aria-controls="ingles" aria-selected="false">Inglês</a>
+    </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="outros-portugues" role="tabpanel" aria-labelledby="portugues-tab">
+        <!-- Conteúdo em Português -->
+        <div class="section odd">
+            <h2>Outros (Português)</h2>
+            {% for outro in data['Outros'] %}
+            <div class="form-group">
+                <label for="outros_id_{{ outro.id }}">ID:</label>
+                <input type="text" class="form-control" id="outros_id_{{ outro.id }}" name="outros_id_{{ outro.id }}" value="{{ outro.id }}">
+            </div>
+            <div class="form-group">
+                <label for="outros_alias_{{ outro.id }}">Alias:</label>
+                <input type="text" class="form-control" id="outros_alias_{{ outro.id }}" name="outros_alias_{{ outro.id }}" value="{{ outro.alias }}">
+            </div>
+            <div class="form-group">
+                <label for="outros_descricao_pt_{{ outro.id }}">Descrição:</label>
+                <textarea class="form-control" id="outros_descricao_pt_{{ outro.id }}" name="outros_descricao_pt_{{ outro.id }}" rows="4">{{ outro.descricao_pt }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="outros_duracao_{{ outro.id }}">Duração:</label>
+                <input type="text" class="form-control" id="outros_duracao_{{ outro.id }}" name="outros_duracao_{{ outro.id }}" value="{{ outro.duracao }}">
+            </div>
+            <hr class="my-4">
+            <hr class="custom-divider">
+             
+        </div>
+    </div>
+    <div class="tab-pane fade" id="outros-ingles" role="tabpanel" aria-labelledby="ingles-tab">
+        <!-- Conteúdo em Inglês -->
+        <div class="section odd">
+            <h2>Outros (Inglês)</h2>
+             
+            <div class="form-group">
+                <label for="outros_id_{{ outro.id }}">ID:</label>
+                <input type="text" class="form-control" id="outros_id_{{ outro.id }}" name="outros_id_{{ outro.id }}" value="{{ outro.id }}">
+            </div>
+            <div class="form-group">
+                <label for="outros_alias_{{ outro.id }}">Alias:</label>
+                <input type="text" class="form-control" id="outros_alias_{{ outro.id }}" name="outros_alias_{{ outro.id }}" value="{{ outro.alias }}">
+            </div>
+            <div class="form-group">
+                <label for="outros_descricao_en_{{ outro.id }}">Description:</label>
+                <textarea class="form-control" id="outros_descricao_en_{{ outro.id }}" name="outros_descricao_en_{{ outro.id }}" rows="4">{{ outro.descricao_en }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="outros_duracao_{{ outro.id }}">Duration:</label>
+                <input type="text" class="form-control" id="outros_duracao_{{ outro.id }}" name="outros_duracao_{{ outro.id }}" value="{{ outro.duracao }}">
+            </div>
+            {% if data['Outros'] | length > 1 %}
+            <hr class="custom-divider">
+            {% endif %}
+            {% endfor %}
+             
+        </div>
+    </div>
+</div>
+        </div>
+
+         <input type="submit" name="Enviar" class="btn-enviar">
+
+        </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</form>
+</body>
+</html>

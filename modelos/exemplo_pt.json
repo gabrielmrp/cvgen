@@ -38,12 +38,17 @@
             "fer",
             "csap"
         ],
-        "agil": [],
+        "habilidades_tecnicas": [
+            "a"
+        ],
+        "habilidades_comportamentais": [
+            "*"
+        ],
+        "idiomas": [
+            "*"
+        ],
         "outros": [
             "vol"
-        ],
-        "habilidades_tecnicas": [],
-        "habilidades_comportamentais": [],
-        "idiomas": []
+        ]
     }
 }

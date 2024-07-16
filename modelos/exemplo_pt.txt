@@ -37,9 +37,12 @@ estrutura
 		mic 
 		fer
 		csap
-		agil		
+		agil	 
+	habilidades_tecnicas 
+		a
+	habilidades_comportamentais
+		*
+	idiomas
+		* 
 	outros
 		vol
-	habilidades_tecnicas 
-	habilidades_comportamentais
-	idiomas 
