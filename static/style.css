@@ -20,6 +20,10 @@ body {
 .section ul li span {
     line-height: 1.2em;
 }
+
+.section .odd{
+    background: #f1f1f1; 
+}
 .container {
     width: 80%;
     margin: auto;
@@ -134,7 +138,7 @@ li b, div.flex-items b{
 }
 
 .section ul {
-    margin-top: 1em;
+    margin: 0;
     padding: 0;
     line-height: 1em;
 } 
