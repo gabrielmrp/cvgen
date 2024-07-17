@@ -23,44 +23,79 @@
 
         <script>
             document.getElementById('save-pdf').addEventListener('click', () => {
-                const element = document.body;
-                const opt = {
-                    margin:       [10, 0, {{margem}}, 0] ,
-                    filename:     '{{ file_name }}',
-                    image:        { type: 'jpeg', quality: 1 },
-                    html2canvas:  { scale: 3},
-                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-                };
+    const element = document.body;
+    const opt = {
+        margin: [10, 0, {{margem}}, 0],
+        filename: '{{ file_name }}',
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
 
-                document.getElementById('save-pdf').classList.add('no-print');
-                document.getElementById('footer').classList.add('no-print');
-                // New Promise-based usage:
-                html2pdf().from(element).set(opt).save().then(() => {
-                    // Remove the 'no-print' class after the PDF is generated
+    document.getElementById('save-pdf').classList.add('no-print');
+    document.getElementById('footer').classList.add('no-print');
+
+    html2pdf().from(element).set(opt).toPdf().get('pdf').then(function (pdf) {
+        const totalPages = pdf.internal.getNumberOfPages();
+        
+        // Function to check if a page is blank
+        function isPageBlank(pageNumber) {
+            pdf.setPage(pageNumber);
+            const pageContent = pdf.internal.pages[pageNumber].join('').trim();
+            return pageContent.length === 0;
+        }
+
+        // Check if the last page is blank and remove it if necessary
+
+        console.log(pdf.internal.pages[totalPages].length)
+        console.log(pdf.output('datauristring', { page: 1 }).length)
+        console.log(pdf.output('datauristring', { page: 2 }).length)
+        console.log(pdf.output('datauristring', { page: 3 }).length)
+        //if (isPageBlank(totalPages)  ) {
+             
+        //}
+
+        // Get the updated total number of pages after possibly removing the last page
+        const updatedTotalPages = pdf.internal.getNumberOfPages();
+
+        if (updatedTotalPages > 2) {
+            const userConfirmed = confirm('O PDF possui mais de 2 páginas. Deseja considerar só as 2 primeiras?');
+            if (!userConfirmed) {
                 document.getElementById('save-pdf').classList.remove('no-print');
                 document.getElementById('footer').classList.remove('no-print');
-                    // Make a POST request to the Flask server to move the PDF
+            //return;
+            }
+            else{
+                pdf.deletePage(totalPages);
+            }
+        }
 
-                setTimeout(() => {
-                    fetch('http://127.0.0.1:9970/move-pdf', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            file_name: '{{ file_name }}',
-                            download_path: '{{ download_path }}',
-                            destination_path: '{{ destination_path }}'
-                        })
+        // Save the PDF and then proceed with post-generation steps
+        pdf.save(opt.filename).then(() => {
+            // Remove the 'no-print' class after the PDF is generated
+            document.getElementById('save-pdf').classList.remove('no-print');
+            document.getElementById('footer').classList.remove('no-print');
+            
+            // Make a POST request to the Flask server to move the PDF
+            setTimeout(() => {
+                fetch('http://127.0.0.1:9970/move-pdf', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        file_name: '{{ file_name }}',
+                        download_path: '{{ download_path }}',
+                        destination_path: '{{ destination_path }}'
                     })
-                    .then(response => response.text())
-                    .then(data => console.log(data))
-                    .catch(error => console.error('Error:', error));
-                }, 3000);    
-
-
-            });
+                })
+                .then(response => response.text())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+            }, 3000);
         });
+    });
+});
         </script>
         <main>
         {% block content %}{% endblock %}

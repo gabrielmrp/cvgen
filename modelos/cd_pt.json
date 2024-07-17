@@ -1,5 +1,5 @@
 {
-    "idioma": "en",
+    "idioma": "pt",
     "nome": "Cientista de Dados",
     "arquivo": "cd_pt.pdf",
     "pasta_downloads": "C:\\\\Users\\\\GABRIEL\\\\Downloads",
@@ -17,41 +17,48 @@
             "email",
             "url"
         ],
+        "titulo": [
+            "tcd"
+        ],
         "resumo": [
-            "main"
+            "rcd"
         ],
         "formacao": [
             "grad"
         ],
         "experiencias": [
-            "ame ...",
             "chut ...",
+            "ame ...",
             "up2 ..."
         ],
         "experiencias_adicionais": [
-            "unuh",
             "pça",
-            "belo",
-            "abcb",
-            "nex",
-            "sete",
             "kfa",
+            "belo",
             "ccnm"
         ],
         "formacao_complementar": [
             "adev",
-            "stp",
             "aws",
             "ebd",
-            "hack",
             "isa",
             "mlb"
         ],
-        "habilidades_tecnicas": [],
-        "habilidades_comportamentais": [],
-        "idiomas": [],
+        "habilidades_tecnicas": [
+            "py",
+            "pyds",
+            "eng",
+            "anal",
+            "plus"
+        ],
+        "habilidades_comportamentais": [
+            "*"
+        ],
+        "idiomas": [
+            "base"
+        ],
         "outros": [
-            "cov"
+            "dbj"
         ]
     }
 }
