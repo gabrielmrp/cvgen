@@ -13,19 +13,69 @@ import json
 from datetime import datetime
 pd.options.mode.chained_assignment = None
 from collections import OrderedDict
+import datetime
+import hashlib
+from dotenv import load_dotenv
 
-#input_file_path = 'modelos/exemplo_pt.txt'
-#output_file_path = 'modelos/exemplo_pt.json'
+
+#INPUT_FILE_PATH = 'modelos/exemplo_pt.txt'
+#OUTPUT_FILE_PATH = 'modelos/exemplo_pt.json'
 #INPUT_JSON = 'exemplo_pt.json'
 #data_source = 'dados_exemplo'
 
 data_source = 'dados'#_exemplo
-input_file_path = 'modelos/cd_pt.txt'
-output_file_path = 'modelos/cd_pt.json'  
-INPUT_JSON = 'cd_pt.json'
-
+ 
 app = Flask(__name__)
 CORS(app)
+
+
+
+
+def convert_to_fixed_hash(s):
+    """Convert a string to a fixed hash with characters between 0 and Z."""
+    # Define the possible characters (0-9, A-Z)
+    chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    max_index = len(chars) - 1
+
+    # Create a simple hash by summing the ASCII values of the characters in the string
+    if len(s)<5:
+
+        hash_value = sum([ord(s[i]) ** (i+1)  for i in range(len(s))]) % max_index
+    else:
+        hash_value = sum([ord(s[i]) * (i+1)  for i in range(len(s))]) % max_index
+ 
+    #print(wd)
+    # Convert the hash value to two characters from the chars string
+    return chars[hash_value]
+
+ 
+
+def create_filename(username,filename):
+
+    part0 = filename.split('_')[0]
+    part1 =  filename.split('_')[1]
+
+    # Get current date
+    date_str = datetime.datetime.now().strftime("%Y%m%d")
+    
+    # Generate identifier
+
+    def split_string(s):
+        midpoint = (len(s) + 1) // 2  # Ensures the second part is larger if the length is odd
+        return s[:midpoint], s[midpoint:]
+
+    part0 = split_string(part0)
+ 
+    zz1 = convert_to_fixed_hash(part0[0])
+    zz2 = convert_to_fixed_hash(part0[1])
+    kk = convert_to_fixed_hash(part1)
+    
+    # Construct the filename
+    filename = f"{username}_{date_str}{zz1}{zz2}{kk}.pdf"
+    
+    return filename
+ 
+
 
 def convert_html_to_pdf(html):
     result = io.BytesIO()
@@ -304,18 +354,37 @@ def carregar_dados(data_source, sheet_name, idioma, colunas):
         df[col] = df[f'{col}_{idioma}']
     return df
 
-def processar_cabecalho(df,alias_selecionados_ordenados): 
-    df = df[['alias', 'valor', 'rotulo']]
-    #print(ge)
+def processar_cabecalho(df_cabecalho,df_titulos,alias_selecionados_ordenados): 
+    df_cabecalho = df_cabecalho[['alias', 'valor', 'rotulo']]
+
+    #df_titulos.loc[df_titulos.head(1).index,'alias']='title'
+    df_titulos = df_titulos[['alias', 'valor']] 
+    #df = pd.concat([df_titulos,df_cabecalho]).reset_index(drop=True).fillna('') 
+    #print(wd)
+
+    #for df in [df_cabecalho,df_titulos]:
+        
     if alias_selecionados_ordenados !=  '*' :
-       df.loc[:,'alias_selecionados_ordenados'] = pd.Categorical(df['alias'], categories=alias_selecionados_ordenados, ordered=True) 
-       df = df.sort_values('alias_selecionados_ordenados').dropna(subset=['alias_selecionados_ordenados'])
-    
+       df_cabecalho.loc[:,'alias_selecionados_ordenados'] = pd.Categorical(df_cabecalho['alias'], categories=alias_selecionados_ordenados, ordered=True) 
+       df_cabecalho = df_cabecalho.sort_values('alias_selecionados_ordenados').dropna(subset=['alias_selecionados_ordenados'])
+       #df_cabecalho.set_index('alias', inplace=True)
+
+       df_titulos.loc[:,'alias_selecionados_ordenados'] = pd.Categorical(df_titulos['alias'], categories=alias_selecionados_ordenados, ordered=True) 
+       df_titulos = df_titulos.sort_values('alias_selecionados_ordenados').dropna(subset=['alias_selecionados_ordenados'])  
+       df_titulos.loc[df_titulos.head(1).index,'alias'] = 'title'
+       #df_titulos.set_index('alias', inplace=True)
+       df_titulos = df_titulos.head(1)
+
+    df = pd.concat([df_titulos,df_cabecalho]).reset_index(drop=True)
     df.set_index('alias', inplace=True)
+     
     return df.apply(lambda row: {'valor': row['valor'], 'rotulo': row['rotulo']}, axis=1).to_dict()
 
 def processar_historico(df,alias_selecionados_ordenados,campos):  
-    #print(dw)
+ 
+    if not alias_selecionados_ordenados:
+        return
+
     df['tem_detalhe'] = df['alias'].apply(lambda x: any(alias.startswith(x) for alias in alias_selecionados_ordenados if ' ...' in alias)) 
     alias_selecionados_ordenados = new_array = [item.replace(" ...", "") if item[-4:] == ' ...' else item for item in alias_selecionados_ordenados]
     df = df[df['alias'].isin(alias_selecionados_ordenados)] 
@@ -331,6 +400,9 @@ def processar_resumo(df,alias_selecionados_ordenados):
 
     df.loc[:,'alias_selecionados_ordenados'] = pd.Categorical(df['alias'], categories=alias_selecionados_ordenados, ordered=True) 
     
+    if df.empty:
+        return None   
+
     return df.head(1)['texto'].values[0]
 
 
@@ -455,35 +527,52 @@ def transform():
 
     # Teste do algoritmo
    
-    parsed_data = parse_txt(input_file_path) 
-    save_as_json(parsed_data, output_file_path) 
+    parsed_data = parse_txt(INPUT_FILE_PATH) 
+    save_as_json(parsed_data, OUTPUT_FILE_PATH) 
     return parsed_data 
  
+def get_model_data(modelo,campo):
+    if campo in modelo['estrutura']:
+        return modelo['estrutura'][campo]
+    else:
+        return None
+
 
 
 def get_user_data(idioma):
     
    
     with open('modelos/'+INPUT_JSON, 'r') as f:
-        model = json.load(f)
+        modelo = json.load(f)
 
     df_resumo = carregar_dados(data_source, 'Resumo', idioma, ['texto'])
     
-    resumo = processar_resumo(df_resumo,model['estrutura']['resumo'])
+    resumo = processar_resumo(df_resumo,modelo['estrutura']['resumo'])
     
-    df_cabecalho = carregar_dados(data_source, 'Cabeçalho', idioma, ['rotulo', 'valor']) 
-    cabecalho = processar_cabecalho(df_cabecalho,model['estrutura']['cabecalho'])
+    df_titulos = carregar_dados(data_source, 'Títulos', idioma, ['valor'])
+    df_cabecalho = carregar_dados(data_source, 'Cabeçalho', idioma, ['rotulo', 'valor'])  
+
+    try:
+        modelo_cabecalho_titulo = get_model_data(modelo,'cabecalho') + get_model_data(modelo,'titulo')
+    except:
+        if not get_model_data(modelo,'titulo'):
+            return None,'Sem título'
+
+    cabecalho = processar_cabecalho(df_cabecalho,df_titulos,modelo_cabecalho_titulo )
     
     df_experiencias = carregar_dados(data_source, 'Experiências', idioma, ['empresa', 'cargo', 'duracao', 'descricao','detalhe1','detalhe2','detalhe3','detalhe4','detalhe5'])
-    experiencias = processar_experiencias(df_experiencias,model['estrutura']['experiencias'])
-    experiencias_adicionais = processar_experiencias_adicionais(df_experiencias,model['estrutura']['experiencias_adicionais'])
+
+    #print(dfs_experiencias)
+    experiencias = processar_experiencias(df_experiencias,modelo['estrutura']['experiencias'])
+    experiencias_adicionais = processar_experiencias_adicionais(df_experiencias,modelo['estrutura']['experiencias_adicionais'])
 
     df_outros = carregar_dados(data_source, 'Outros', idioma, ['descricao'])
-    outros = processar_historico(df_outros,model['estrutura']['outros'],['duracao', 'descricao'])
+    outros = processar_historico(df_outros,get_model_data(modelo,'outros'),['duracao', 'descricao'])
  
+
     df_formacoes = carregar_dados(data_source, 'Formações', idioma, ['curso', 'instituicao', 'duracao', 'descricao','detalhe1','detalhe2','detalhe3','detalhe4','detalhe5'])
-    formacoes = processar_formacoes(df_formacoes,model['estrutura']['formacao'])
-    formacoes_complementares = processar_formacoes_complementares(df_formacoes,model['estrutura']['formacao_complementar'])
+    formacoes = processar_formacoes(df_formacoes,modelo['estrutura']['formacao'])
+    formacoes_complementares = processar_formacoes_complementares(df_formacoes,modelo['estrutura']['formacao_complementar'])
 
 
     
@@ -491,9 +580,9 @@ def get_user_data(idioma):
     df_classes = pd.read_excel(f'{data_source}.xlsx', sheet_name='Classes')
     habilidades = processar_habilidades(df_habilidades_simples, df_classes, idioma,
         {
-        'técnica' : model['estrutura']['habilidades_tecnicas'],
-        'comportamental' : model['estrutura']['habilidades_comportamentais'],
-        'idioma' : model['estrutura']['idiomas'],
+        'técnica' : modelo['estrutura']['habilidades_tecnicas'],
+        'comportamental' : modelo['estrutura']['habilidades_comportamentais'],
+        'idioma' : modelo['estrutura']['idiomas'],
         }
         )
  
@@ -504,15 +593,34 @@ def get_user_data(idioma):
     return cabecalho, resumo, experiencias,experiencias_adicionais, formacoes,formacoes_complementares, outros, habilidades, sessoes
 
 
-@app.route('/')
-def home(idioma='pt'): 
-    model_data = transform()
- 
 
+@app.route('/',methods=['GET'])
+def home(idioma='pt'): 
+    
+    global INPUT_FILE_PATH
+    global OUTPUT_FILE_PATH
+    global INPUT_JSON
+
+    cv_name = request.args.get('cv')
+
+    if not request.args.get('cv'): 
+        cv_name =   'cd_pt'
+
+
+
+    INPUT_FILE_PATH = f'modelos/{cv_name}.txt' 
+    OUTPUT_FILE_PATH = f'modelos/{cv_name}.json'  
+    INPUT_JSON = f'{cv_name}.json'
+ 
+    model_data = transform()
     idioma = model_data['idioma']
 
-    cabecalho, resumo, experiencias,experiencias_adicionais, formacoes,formacoes_complementares, outros, habilidades, sessoes  = get_user_data(idioma)
-  
+    user_data = get_user_data(idioma)
+    if len(user_data) == 2 and user_data[0]==None:
+        return user_data[1]
+    else: 
+        cabecalho, resumo, experiencias,experiencias_adicionais, formacoes,formacoes_complementares, outros, habilidades, sessoes  = user_data
+    
     html_content =  render_template('curriculo.html', 
         user_data=cabecalho,  
         resumo=resumo,
@@ -524,7 +632,7 @@ def home(idioma='pt'):
         formacoes_complementares=formacoes_complementares,
         outros=outros,
         margem=model_data['margem'], 
-        file_name=model_data['arquivo'],
+        file_name= create_filename(os.getenv("NOME").replace(' ','_'), model_data['arquivo']),
         download_path=model_data['pasta_downloads'],
         destination_path=model_data['pasta_curriculos'] 
         )
@@ -546,5 +654,6 @@ def create_app():
     return app
 
 if __name__ == '__main__':
+    
     app.run(debug=True, port=9970)
  

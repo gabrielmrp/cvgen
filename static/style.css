@@ -145,3 +145,8 @@ li b, div.flex-items b{
 .section ul li { 
     margin-left: 3em;
 }
+.title-date{
+    display: flex;
+     justify-content: space-between;
+     align-items: baseline; 
+}
