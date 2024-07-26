@@ -25,6 +25,7 @@
 </head>
 <body>
     
+    <body> 
     <style type="text/css">
             body {
         font-family: Arial, sans-serif;
@@ -36,7 +37,7 @@
             <div class="user-info">Usuário: exemplo</div>
         </a>
     </div>
-
+ 
     <script>
     document.getElementById('save-pdf').addEventListener('click', () => {
             const element = document.body;
@@ -90,17 +91,15 @@
             document.getElementById('save-pdf').classList.remove('no-print');
             document.getElementById('footer').classList.remove('no-print');
             document.getElementById('controls').classList.remove('no-print');
-            document.getElementById('usuario').classList.remove('no-print');
-
-            
+            document.getElementById('usuario').classList.remove('no-print'); 
             // Make a POST request to the Flask server to move the PDF
             setTimeout(() => {
-                fetch('http://127.0.0.1:9970/move-pdf', {
-                    method: 'POST', 
+                fetch('http://127.0.0.1:9970/move-pdf', { 
+                    method: 'POST',   
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
+                    body: JSON.stringify({ 
                         file_name: 'CURRICULO_FICTICIO_DE_EXEMPLO_20240725NHR.pdf' 
                     })
                 })
@@ -116,10 +115,10 @@
             }, 3000);
         });
 
-    });
-   </script>
-    <main>
-    
+    }); 
+        </script> 
+        <main> 
+            
     <div class="container"> 
         
             <div class="header">
@@ -364,7 +363,6 @@
     <div class="item">
         <div style="display: flex; justify-content: space-between;">
              <div><span>Voluntariado 4h por dia na APAE de minha cidade</span> </div>  
-        <!--<span class="item"><i></i></span>  --> 
         <div><span style="margin: 0;">2014</span></div></div>
         
      </div> 
@@ -373,8 +371,13 @@
          
         
     </div>
-
-    </main>  
+   
+        </main>
+        <footer id="footer">
+            <span>&copy; 2024 GAMARP</span>
+        </footer>
+    </body>
+</html> 
 
 </body>
 <footer id="footer">
