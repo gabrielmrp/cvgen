@@ -1,12 +1,13 @@
+Procfile
+modelos/cd_pt.json
+modelos/cd_pt.txt
 templates/profiler.html
 output.pdf
 dados.xlsx
 create_venv.bat
 call_venv.bat
 cur_env
-~$dados.xlsx
-~$dados_exemplo.xlsx
-~$dados_planilha.xlsx
+~$* 
 dados_planilha.xlsx
 templates/cvx.html
 .gitignore

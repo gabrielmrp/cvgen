@@ -394,7 +394,7 @@ def mostra_usuario():
 @app.route('/versoes',methods=['GET'])
 def versoes(): 
   
-    # Lista os arquivos no diretório
+    # Lista os arquivos no diretório x
     arquivos = os.listdir("modelos")   
    
 
@@ -404,7 +404,7 @@ def versoes():
         arquivos =  [arq for arq in arquivos if arq.startswith('exemplo') == False]
         
     arquivos = [arq[:-4] for arq in arquivos if arq[-4:]=='.txt']
- 
+  
     df_arquivos = pd.DataFrame([[arq,arq.split('_')[0],arq.split('_')[1]] for arq in arquivos],columns=['modelo_completo','modelo','idioma'])
 
     if df_arquivos.empty and session.get('usuario').lower() != 'exemplo':
