@@ -35,7 +35,7 @@ table.dataTable>thead .sorting_desc_disabled:after {
         </thead>
         <tbody>
             {% for arquivo in arquivos %}
-            <tr>
+            <tr> 
                 <td><a href="/cv/{{arquivo.modelo_completo}}" class="versao">{{arquivo.modelo}}</a></td>
                 <td><a href="/cv/{{arquivo.modelo_completo}}" class="versao">
                         {% if arquivo.idioma == 'pt' %}

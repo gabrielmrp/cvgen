@@ -1,1 +1,0 @@
-web: waitress-serve --port=9970 --call 'app:create_app()'
