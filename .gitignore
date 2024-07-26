@@ -9,7 +9,7 @@ cur_env
 ~$dados_planilha.xlsx
 dados_planilha.xlsx
 templates/cvx.html
-.gitignore 
+.gitignore
 modelos/cd_pt.json
 modelos/* 
 !modelos/exemplo*
