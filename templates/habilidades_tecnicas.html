@@ -3,9 +3,8 @@
     <ul class="no-bullet">
          {% for habilidade in habilidades  %}
             {% if habilidade.tipo == 'técnica' %}
-                <li>
-                    <b>{{habilidade.classe}} :</b>
-                    <span class='p'>{{habilidade.nome}}.</span class='p'> 
+                <li> 
+                    <p class='p'><span class="b">{{habilidade.classe}}: </span>{{habilidade.nome}}.</p> 
                 </li>
             {% endif %}
          {% endfor %} 

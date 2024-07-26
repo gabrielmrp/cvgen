@@ -21,6 +21,8 @@ estrutura
 		linkedin
 		email
 		url 
+	titulo
+		tit
 	resumo
 		main
 	formacao

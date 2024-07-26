@@ -3,17 +3,17 @@
     {% for formacao in formacoes %}
     {% if formacao.tipo == 'principal' %}
     <div class="item">
-        <div style="display: flex; justify-content: space-between;">
+        <div class="title-date">
             <div><h3 class="item" ><b>{{ formacao.curso }}</b> <span class='where'>{{ formacao.instituicao }}</span></h3></div><div><span style="margin: 0;">{{ formacao.duracao }}</span></div>
         </div>   
         <p>{{ formacao.descricao }}</p>
         {% if formacao.tem_detalhe %}
             <ul>
-                {% if formacao.detalhe_1 != '' %} <li><span>{{ formacao.detalhe_1 }}</span></li>{% endif %} 
-                {% if formacao.detalhe_2 != '' %} <li><span>{{ formacao.detalhe_2 }}</span></li>{% endif %} 
-                {% if formacao.detalhe_3 != '' %} <li><span>{{ formacao.detalhe_3 }}</span></li>{% endif %} 
-                {% if formacao.detalhe_4 != '' %} <li><span>{{ formacao.detalhe_4 }}</span></li>{% endif %} 
-                {% if formacao.detalhe_5 != '' %} <li><span>{{ formacao.detalhe_5 }}</span></li>{% endif %} 
+                {% if formacao.detalhe1 != '' %} <li><span>{{ formacao.detalhe1 }}</span></li>{% endif %} 
+                {% if formacao.detalhe2 != '' %} <li><span>{{ formacao.detalhe2 }}</span></li>{% endif %} 
+                {% if formacao.detalhe3 != '' %} <li><span>{{ formacao.detalhe3 }}</span></li>{% endif %} 
+                {% if formacao.detalhe4 != '' %} <li><span>{{ formacao.detalhe4 }}</span></li>{% endif %} 
+                {% if formacao.detalhe5 != '' %} <li><span>{{ formacao.detalhe5 }}</span></li>{% endif %} 
             </ul>
             {% endif %} 
     </div>

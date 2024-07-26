@@ -1,279 +1,44 @@
-from flask import Flask, render_template, make_response, redirect, url_for, request
-from flask_cors import CORS
+from flask import Flask, send_from_directory, session, render_template, make_response, redirect, url_for, request
 import pandas as pd
 import numpy as np
 import io
 import os
-import shutil
-#import pdfkit
-from xhtml2pdf import pisa
-import xlsxwriter
-#config = pdfkit.configuration(wkhtmltopdf='C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe')
+import shutil  
 import json 
 from datetime import datetime
-pd.options.mode.chained_assignment = None
-from collections import OrderedDict
-
-#input_file_path = 'modelos/exemplo_pt.txt'
-#output_file_path = 'modelos/exemplo_pt.json'
-#INPUT_JSON = 'exemplo_pt.json'
-#data_source = 'dados_exemplo'
-
-data_source = 'dados'#_exemplo
-input_file_path = 'modelos/cd_pt.txt'
-output_file_path = 'modelos/cd_pt.json'  
-INPUT_JSON = 'cd_pt.json'
-
+from collections import OrderedDict 
+import hashlib
+from dotenv import load_dotenv 
+from flask_cors import CORS
+from werkzeug.debug import get_pin_and_cookie_name
+import threading
+from bs4 import BeautifulSoup
+import sys 
+from PyQt5.QtWidgets import QApplication, QPushButton, QWidget, QVBoxLayout
+from PyQt5.QtCore import QProcess
+  
 app = Flask(__name__)
+
+app.secret_key = os.getenv('FLASK_SESSION_SECRET_KEY')
 CORS(app)
 
-def convert_html_to_pdf(html):
-    result = io.BytesIO()
-    pdf = pisa.pisaDocument(io.BytesIO(html.encode("UTF-8")), dest=result)
-    if not pdf.err:
-        return result.getvalue()
-    return None
+pd.options.mode.chained_assignment = None
 
-@app.route('/para_planilha', methods=['POST'])
-def para_planilha(): 
-    if request.method == 'POST':
-        print(request.form.get('cabecalho_perfil_pt'))
+@app.route('/')
+def index():
+    return redirect(url_for('usuarios'))
 
-        data = request.form.to_dict()
-        # Exemplos de DataFrames vazios
-        
-
-         
-
-        # Função para preencher os DataFrames
-        # Função para preencher os DataFrames
-        def populate_dataframes(data):
-            cabecalho = pd.DataFrame(columns=['rotulo_pt','rotulo_en','valor_pt','valor_en'])
-            resumo = pd.DataFrame(columns=['id','alias', 'texto_pt', 'texto_en'])
-
-            secoes = pd.DataFrame(columns=['id','alias', 'nome_pt', 'nome_en'])
-
-            experiencia = pd.DataFrame(columns=['id', 'alias', 'cargo_pt', 'empresa_pt', 'duracao_pt', 'descricao_pt', 'detalhe1_pt', 'detalhe2_pt', 'detalhe3_pt', 'detalhe4_pt', 'detalhe5_pt', 'cargo_en', 'empresa_en', 'duracao_en', 'descricao_en', 'detalhe1_en', 'detalhe2_en', 'detalhe3_en', 'detalhe4_en', 'detalhe5_en'])
-            formacao = pd.DataFrame(columns=['id', 'alias', 'curso_pt', 'instituicao_pt', 'duracao_pt', 'descricao_pt', 'detalhe1_pt', 'detalhe2_pt', 'detalhe3_pt', 'detalhe4_pt', 'detalhe5_pt', 'curso_en', 'instituicao_en', 'duracao_en', 'descricao_en', 'detalhe1_en', 'detalhe2_en', 'detalhe3_en', 'detalhe4_en', 'detalhe5_en'])
-
-            habilidade = pd.DataFrame(columns=['id','classe_pt','classe_en','tipo','nome_pt','nome_en'])
-
-            habilidade_tecnica = pd.DataFrame(columns=['id','classe_pt','classe_en','tipo','nome_pt','nome_en'])
-            habilidade_comportamental = pd.DataFrame(columns=['id','classe_pt','classe_en','tipo','nome_pt','nome_en'])
-            habilidade_idioma = pd.DataFrame(columns=['id','classe_pt','classe_en','tipo','nome_pt','nome_en'])
-
-            outros = pd.DataFrame(columns=['id','alias','descricao_en','descricao_pt','duracao'])
-
-             
-
-            for key, value in data.items():
-                print(key)
-                if key!='Enviar':
-                    parts = key.split('_')
-
-                    if len(parts) == 3:
-                        dataframe, coluna, idioma = parts
-                        id_val = None
-                    elif len(parts) == 4:
-                        dataframe, tipo, coluna, idioma = parts 
-                        id_val = None
-                    elif len(parts) == 5:
-                        dataframe, tipo, coluna, idioma, id_val = parts
-                    else:
-                        raise ValueError(f"Unexpected key format: {key}")
-
-                    if dataframe == 'cabecalho': 
-                        cabecalho.loc[tipo,f'{coluna}_{idioma}'] = value 
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 
-                    elif dataframe == 'secoes':
-
-                        if coluna == 'alias' or coluna == 'id':
-                            id_val = parts[-1]
-                            secoes.at[id_val, f'{coluna}'] = value
-                        else: 
-                            dataframe, coluna, idioma, id_val = parts 
-                            secoes.at[id_val, f'{coluna}_{idioma}'] = value
-
-                    elif dataframe == 'resumo':
-                        if coluna == 'alias' or coluna == 'id':
-                            id_val = parts[-1]
-                            resumo.at[id_val, f'{coluna}'] = value
-                        else: 
-                            dataframe, coluna, idioma, id_val = parts 
-                            resumo.at[id_val, f'{coluna}_{idioma}'] = value
-
-
-                    elif dataframe == 'experiencia' : 
-                        if len(parts) == 3: 
-                            dataframe, coluna,id_val  = parts
-                            experiencia.at[id_val, coluna] = value
-                            
-                        elif len(parts) == 4: 
-                            dataframe, coluna, idioma,id_val  = parts
-                            experiencia.at[id_val, f'{coluna}_{idioma}'] = value 
-                        else:
-                            pass
-  
-
-                    elif dataframe == 'formacao': 
-                        if len(parts) == 3: 
-                            dataframe, coluna,id_val  = parts
-                            formacao.at[id_val, coluna] = value
-                            
-                        elif len(parts) == 4: 
-                            dataframe, coluna, idioma,id_val  = parts
-                            formacao.at[id_val, f'{coluna}_{idioma}'] = value 
-                        else:
-                            pass
-
-                    elif dataframe == 'outros': 
-                        if len(parts) == 3: 
-                            dataframe, coluna,id_val  = parts
-                            outros.at[id_val, coluna] = value
-                            
-                        elif len(parts) == 4: 
-                            dataframe, coluna, idioma,id_val  = parts
-                            outros.at[id_val, f'{coluna}_{idioma}'] = value 
-                        else:
-                            pass
-
-
-                    
-                    elif dataframe == 'habilidade':  
-                        simple = False
-                        if len(parts) == 4:
-                            if parts[-2] not in ['en','pt']: 
-                                simple=True
-                                dataframe, tipo, coluna,id_val  = parts 
-                            else:
-                                dataframe, coluna, idioma,id_val  = parts
-                        elif len(parts) == 5:
-                            if parts[-2] not in ['en','pt']: 
-                                simple=True
-                                print(dw)
-                            else:
-                                dataframe, tipo, coluna, idioma, id_val  = parts  
-                        id_val = int(parts[-1]) - 1  
-
-                        if tipo in ['tecnica', 'comportamental', 'idioma']: 
-                            if tipo == 'tecnica':
-                                df = habilidade_tecnica
-                            elif tipo == 'comportamental':
-                                df = habilidade_comportamental
-                            elif tipo == 'idioma':
-                                df = habilidade_idioma
- 
-                            df.at[id_val, 'tipo'] = tipo 
-                            if simple:
-                                col_atualizar = coluna
-                            else:
-                                col_atualizar = f'{coluna}_{idioma}'
- 
-                            df.at[id_val, col_atualizar] = value
-
- 
-            habilidade = pd.concat([habilidade_tecnica,habilidade_comportamental,habilidade_idioma]).reset_index(drop = True) 
-
-            classes = habilidade[[ 'alias', 'classe_pt', 'classe_en','tipo']].drop_duplicates()
-            classes.index = range(1, len(classes) + 1)
-
-            #
-
-            for i in range(habilidade.shape[0]):
-                row = habilidade.iloc[i]
-                matched_index = classes[(classes['alias'] == row['alias']) & 
-                                        (classes['classe_pt'] == row['classe_pt']) & 
-                                        (classes['classe_en'] == row['classe_en'])].index[0]
-                habilidade.loc[i,'classe'] = str(matched_index)
-
-            classes.reset_index(inplace=True)
-            classes.rename(columns={'index':'classe'},inplace=True)
-            habilidade=habilidade[['id','classe','nome_pt','nome_en']]  
-
-            return cabecalho,resumo,experiencia,formacao,habilidade,classes,outros,secoes
-
-                 
-        # Preencher os DataFrames com os dados do dicionário
-        cabecalho,resumo,experiencia,formacao,habilidade,classes,outros,secoes  = populate_dataframes(data)
-
-        #cabecalho.set_index('alias', inplace=True)
-        cabecalho.reset_index(inplace=True) 
-        cabecalho.rename(columns={'index':'alias'},inplace=True)
-
-        #return cabecalho.to_html()+"<br>"+resumo.to_html()+"<br>"+experiencia.to_html()+formacao.to_html()+ habilidade.to_html()#+ idioma.to_html()
-
-        nome_arquivo = 'dados_planilha.xlsx'
-        with pd.ExcelWriter(nome_arquivo, engine='openpyxl') as writer:
-            # Salvar cada DataFrame em uma aba diferente
-            cabecalho.to_excel(writer, sheet_name='Cabeçalho', index=False)
-            resumo.to_excel(writer, sheet_name='Resumo', index=False)
-            experiencia.to_excel(writer, sheet_name='Experiência', index=False)
-            formacao.to_excel(writer, sheet_name='Formação', index=False)
-            outros.to_excel(writer, sheet_name='Outros', index=False)
-            secoes.to_excel(writer, sheet_name='Seções', index=False)
-            habilidade.to_excel(writer, sheet_name='Habilidade', index=False)
-            classes.to_excel(writer, sheet_name='Classes', index=False)
-
-
-
-
-        return resumo.to_html() 
-        # Exibir os DataFrames preenchidos
-        
-@app.route('/compare')
-def compare(): 
-    df1 = pd.read_excel('dados_planilha.xlsx')
-    df2 = pd.read_excel('dados.xlsx')
-    if df1.equals(df2):
-        return "Os arquivos são idênticos."
-    else:
-        diff = df1.compare(df2, align_axis=0, keep_shape=True)
-        return diff.to_html()
-
-
-@app.route('/profiler')
-def profiler(): 
-    sheets = ['Outros', 'Experiências', 'Habilidades', 'Formações','Resumo','Seções']  # Nomes das abas
-    data = read_excel_data(data_source, sheets)
-    cabecalho = read_cabecalho_data(data_source)
-    habilidades = read_habilidades_data(data_source)
-    #print(dw)
-     
-    return render_template('profiler.html', data=data , cabecalho=cabecalho, habilidades=habilidades  )
-
-# Função para ler o CSV e retornar os dados
-def read_excel_data(data_source, sheets):
-    try:
-        data = {}
-        for sheet_name in sheets:
-            df = pd.read_excel(f'{data_source}.xlsx', sheet_name=sheet_name).fillna('')
-            data[sheet_name] = df.to_dict(orient='records')  # Converte o DataFrame para lista de dicionários.head(np.infinity)
-        return data
-    except Exception as e:
-        print(f"Erro ao ler o arquivo Excel: {str(e)}")
-        return None
-
-def read_cabecalho_data(data_source):
-    # Carregar o arquivo Excel
-    df = pd.read_excel(data_source+".xlsx", sheet_name='Cabeçalho') 
-    return df.set_index('alias').T.to_dict()
-
-def read_habilidades_data(data_source):
-    array_dfs = {}
-    df_habilidades_simples = pd.read_excel(data_source+".xlsx", sheet_name='Habilidades') 
-    df_classes = pd.read_excel(data_source+".xlsx", sheet_name='Classes') 
-    df = pd.merge(df_habilidades_simples, df_classes, on='classe').fillna('')
-
-    for u in df.tipo.unique():
-        array_dfs[u] = df[df.tipo == u].to_dict(orient='records') 
-    return array_dfs
-
-@app.route('/move-pdf', methods=['POST'])
+@app.route('/move-pdf', methods=['POST','GET'])
 def move_pdf():
-    download_path = request.json.get('download_path')
-    destination_path = request.json.get('destination_path')
-    file_name = request.json.get('file_name')
+    file_name =  request.json.get('file_name')
+    download_path = os.getenv("DOWNLOAD_FOLDER")
+    destination_path = os.getenv("DESTINATION_FOLDER") 
 
     # Verifica o caminho completo do arquivo a ser movido
     file_path = os.path.join(download_path, file_name)
@@ -297,92 +62,8 @@ def move_pdf():
     else:
         return f'{file_name} - Arquivo não encontrado', 404
 
-
-def carregar_dados(data_source, sheet_name, idioma, colunas):
-    df = pd.read_excel(f'{data_source}.xlsx', sheet_name=sheet_name)
-    for col in colunas:
-        df[col] = df[f'{col}_{idioma}']
-    return df
-
-def processar_cabecalho(df,alias_selecionados_ordenados): 
-    df = df[['alias', 'valor', 'rotulo']]
-    #print(ge)
-    if alias_selecionados_ordenados !=  '*' :
-       df.loc[:,'alias_selecionados_ordenados'] = pd.Categorical(df['alias'], categories=alias_selecionados_ordenados, ordered=True) 
-       df = df.sort_values('alias_selecionados_ordenados').dropna(subset=['alias_selecionados_ordenados'])
     
-    df.set_index('alias', inplace=True)
-    return df.apply(lambda row: {'valor': row['valor'], 'rotulo': row['rotulo']}, axis=1).to_dict()
-
-def processar_historico(df,alias_selecionados_ordenados,campos):  
-    #print(dw)
-    df['tem_detalhe'] = df['alias'].apply(lambda x: any(alias.startswith(x) for alias in alias_selecionados_ordenados if ' ...' in alias)) 
-    alias_selecionados_ordenados = new_array = [item.replace(" ...", "") if item[-4:] == ' ...' else item for item in alias_selecionados_ordenados]
-    df = df[df['alias'].isin(alias_selecionados_ordenados)] 
-
-    df.loc[:,'alias_selecionados_ordenados'] = pd.Categorical(df['alias'], categories=alias_selecionados_ordenados, ordered=True) 
-    df = df.sort_values('alias_selecionados_ordenados')
-    return df[campos].fillna('').to_dict('records') 
-
-def processar_resumo(df,alias_selecionados_ordenados):
-
-    #print(wd)
-    df = df[df['alias'].isin(alias_selecionados_ordenados)] 
-
-    df.loc[:,'alias_selecionados_ordenados'] = pd.Categorical(df['alias'], categories=alias_selecionados_ordenados, ordered=True) 
-    
-    return df.head(1)['texto'].values[0]
-
-
-
-def processar_experiencias(df,alias_selecionados_ordenados,secundario=False):
-    df['tipo'] = 'principal'
-    if secundario:
-        df['tipo'] = 'complementar' 
-    return processar_historico(df,alias_selecionados_ordenados,['empresa', 'cargo', 'duracao','tipo', 'descricao', 'detalhe1','detalhe2','detalhe3','detalhe4','detalhe5','tem_detalhe'])
-
-def processar_experiencias_adicionais(df,alias_selecionados_ordenados):
-    return processar_experiencias(df,alias_selecionados_ordenados,True)
-
-def processar_formacoes(df,alias_selecionados_ordenados,secundario=False):
-    df['tipo'] = 'principal'
-    if secundario:
-        df['tipo'] = 'secundária' 
-    return processar_historico(df,alias_selecionados_ordenados,['curso', 'instituicao', 'duracao','tipo', 'descricao',  'detalhe1','detalhe2','detalhe3','detalhe4','detalhe5','tem_detalhe'])
-
-def processar_formacoes_complementares(df,alias_selecionados_ordenados): 
-    return processar_formacoes(df,alias_selecionados_ordenados,True)
- 
-
-def processar_habilidades(df_habilidades_simples, df_classes, idioma, grupos_selecionados_ordenados):
-    df_habilidades = pd.merge(df_habilidades_simples, df_classes, on='classe').fillna('')
-
-    #print(dw)
-    df_partes = []
-    for key in df_habilidades.tipo.unique(): 
-        if grupos_selecionados_ordenados[key] != ['*']:
-
-            aux_df = df_habilidades
-            aux_df.loc[:,'grupos_selecionados_ordenados'] =  pd.Categorical(df_habilidades['grupo'], categories=grupos_selecionados_ordenados[key], ordered=True)
-                    
-            df_partes.append(aux_df.sort_values('grupos_selecionados_ordenados').dropna(subset=['grupos_selecionados_ordenados']))
-        else:
-            df_partes.append(df_habilidades[df_habilidades.tipo == key])
-
-    df_habilidades_concatenadas = pd.concat(df_partes) 
-
-    df_habilidades_concatenadas['nome'] = df_habilidades_concatenadas[f'nome_{idioma}']
-    df_habilidades_concatenadas['classe'] = df_habilidades_concatenadas[f'classe_{idioma}']
-    
-
-    return df_habilidades_concatenadas.groupby(['classe', 'tipo'])['nome'].apply(' / '.join).reset_index().to_dict('records')
-
-def processar_sessoes(df, idioma):
-    return df.set_index(df.columns[1]).to_dict()[f'nome_{idioma}']
-
- 
-#@app.route('/transform')
-def transform():
+def transform_idented_txt_to_json(cv_name):
     def parse_txt(file_path):
 
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -439,7 +120,7 @@ def transform():
         result = { p:None for p in primeiro_nivel}
 
         for item in primeiro_nivel: 
-            if item == 'estrutura': 
+            if item in ['estrutura']:#,'renomear']: 
                result[item] = {}
                for item_segundo_nivel in [list(d.keys())[0] for d in associations if item in d.values()]:
                    result[item][item_segundo_nivel] =  [] 
@@ -454,65 +135,314 @@ def transform():
             json.dump(data, json_file, ensure_ascii=False, indent=4)
 
     # Teste do algoritmo
+
+    INPUT_FILE_PATH = 'modelos/'+cv_name+'.txt' 
+    OUTPUT_FILE_PATH = 'modelos/'+cv_name+'.json'
    
-    parsed_data = parse_txt(input_file_path) 
-    save_as_json(parsed_data, output_file_path) 
+    parsed_data = parse_txt(INPUT_FILE_PATH) 
+    save_as_json(parsed_data, OUTPUT_FILE_PATH) 
     return parsed_data 
+
+
+def create_filename_hashed_suffix(username,filename): 
+
+    def convert_to_fixed_hash(s):
+        """Convert a string to a fixed hash with characters between 0 and Z."""
+        # Define the possible characters (0-9, A-Z)
+        chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        max_index = len(chars) - 1
+
+        # Create a simple hash by summing the ASCII values of the characters in the string
+        if len(s)<5:
+
+            hash_value = sum([ord(s[i]) ** (i+1)  for i in range(len(s))]) % max_index
+        else:
+            hash_value = sum([ord(s[i]) * (i+1)  for i in range(len(s))]) % max_index
+     
+        #print(wd)
+        # Convert the hash value to two characters from the chars string
+        return chars[hash_value]
+
+    part0 = filename.split('_')[0]
+    part1 =  filename.split('_')[1]
+
+    # Get current date
+    date_str = datetime.now().strftime("%Y%m%d")
+    
+    # Generate identifier
+
+    def split_string(s):
+        midpoint = (len(s) + 1) // 2  # Ensures the second part is larger if the length is odd
+        return s[:midpoint], s[midpoint:]
+
+    part0 = split_string(part0)
+ 
+    zz1 = convert_to_fixed_hash(part0[0])
+    zz2 = convert_to_fixed_hash(part0[1])
+    kk = convert_to_fixed_hash(part1)
+    
+    # Construct the filename
+    filename = f"{username}_{date_str}{zz1}{zz2}{kk}.pdf"
+    
+    return filename
+
+def process_cabecalho(df_cabecalho,df_titulos,alias_selecionados_ordenados): 
+    df_cabecalho = df_cabecalho[['alias', 'valor', 'rotulo']]
+ 
+    df_titulos = df_titulos[['alias', 'valor']]  
+        
+    if alias_selecionados_ordenados !=  '*' :
+       df_cabecalho.loc[:,'alias_selecionados_ordenados'] = pd.Categorical(df_cabecalho['alias'], categories=alias_selecionados_ordenados, ordered=True) 
+       df_cabecalho = df_cabecalho.sort_values('alias_selecionados_ordenados').dropna(subset=['alias_selecionados_ordenados'])
+       #df_cabecalho.set_index('alias', inplace=True)
+
+       df_titulos.loc[:,'alias_selecionados_ordenados'] = pd.Categorical(df_titulos['alias'], categories=alias_selecionados_ordenados, ordered=True) 
+       df_titulos = df_titulos.sort_values('alias_selecionados_ordenados').dropna(subset=['alias_selecionados_ordenados'])  
+       df_titulos.loc[df_titulos.head(1).index,'alias'] = 'titulo' 
+       df_titulos = df_titulos.head(1) 
+
+    df = pd.concat([df_titulos,df_cabecalho]).reset_index(drop=True)
+    df.set_index('alias', inplace=True)
+     
+    return df.apply(lambda row: {'valor': row['valor'], 'rotulo': row['rotulo']}, axis=1).to_dict()
+
+def process_historico(df,alias_selecionados_ordenados,campos):  
+ 
+    if not alias_selecionados_ordenados:
+        return
+
+    df['tem_detalhe'] = df['alias'].apply(lambda x: any(alias.startswith(x) for alias in alias_selecionados_ordenados if ' ...' in alias)) 
+    alias_selecionados_ordenados = new_array = [item.replace(" ...", "") if item[-4:] == ' ...' else item for item in alias_selecionados_ordenados]
+    df = df[df['alias'].isin(alias_selecionados_ordenados)] 
+
+    df.loc[:,'alias_selecionados_ordenados'] = pd.Categorical(df['alias'], categories=alias_selecionados_ordenados, ordered=True) 
+    df = df.sort_values('alias_selecionados_ordenados')
+    return df[campos].fillna('').to_dict('records') 
+
+def process_resumo(df,alias_selecionados_ordenados):  
+
+    df = df[df['alias'].isin(alias_selecionados_ordenados)]  
+    df.loc[:,'alias_selecionados_ordenados'] = pd.Categorical(df['alias'], categories=alias_selecionados_ordenados, ordered=True) 
+    
+    if df.empty:
+        return None   
+
+    return df.head(1)['texto'].values[0]
+ 
+def process_experiencias(df,alias_selecionados_ordenados,secundario=False):
+    df['tipo'] = 'principal'
+    if secundario:
+        df['tipo'] = 'complementar' 
+    return process_historico(df,alias_selecionados_ordenados,['empresa', 'cargo', 'duracao','tipo', 'descricao', 'detalhe1','detalhe2','detalhe3','detalhe4','detalhe5','tem_detalhe'])
+
+def process_experiencias_adicionais(df,alias_selecionados_ordenados):
+    return process_experiencias(df,alias_selecionados_ordenados,True)
+
+def process_formacoes(df,alias_selecionados_ordenados,secundario=False):
+    df['tipo'] = 'principal'
+    if secundario:
+        df['tipo'] = 'secundária' 
+    return process_historico(df,alias_selecionados_ordenados,['curso', 'instituicao', 'duracao','tipo', 'descricao',  'detalhe1','detalhe2','detalhe3','detalhe4','detalhe5','tem_detalhe'])
+
+def process_formacoes_complementares(df,alias_selecionados_ordenados): 
+    return process_formacoes(df,alias_selecionados_ordenados,True)
  
 
+def process_habilidades(df_habilidades_simples, df_classes, idioma, grupos_selecionados_ordenados): 
+    df_habilidades = pd.merge(df_habilidades_simples, df_classes,left_on='classe' , right_on='id',suffixes=('_left','_right')).fillna('')
 
-def get_user_data(idioma):
-    
-   
-    with open('modelos/'+INPUT_JSON, 'r') as f:
-        model = json.load(f)
+    #print(dw)
+    df_partes = []
+    for key in df_habilidades.tipo.unique(): 
+        if grupos_selecionados_ordenados[key] != ['*']:
 
-    df_resumo = carregar_dados(data_source, 'Resumo', idioma, ['texto'])
-    
-    resumo = processar_resumo(df_resumo,model['estrutura']['resumo'])
-    
-    df_cabecalho = carregar_dados(data_source, 'Cabeçalho', idioma, ['rotulo', 'valor']) 
-    cabecalho = processar_cabecalho(df_cabecalho,model['estrutura']['cabecalho'])
-    
-    df_experiencias = carregar_dados(data_source, 'Experiências', idioma, ['empresa', 'cargo', 'duracao', 'descricao','detalhe1','detalhe2','detalhe3','detalhe4','detalhe5'])
-    experiencias = processar_experiencias(df_experiencias,model['estrutura']['experiencias'])
-    experiencias_adicionais = processar_experiencias_adicionais(df_experiencias,model['estrutura']['experiencias_adicionais'])
+            aux_df = df_habilidades[df_habilidades.tipo == key]
 
-    df_outros = carregar_dados(data_source, 'Outros', idioma, ['descricao'])
-    outros = processar_historico(df_outros,model['estrutura']['outros'],['duracao', 'descricao'])
+            #print(wd)
+            aux_df.loc[:,'grupos_selecionados_ordenados'] =  pd.Categorical(aux_df['grupo'], categories=grupos_selecionados_ordenados[key], ordered=True)
+                    
+            df_partes.append(aux_df.sort_values('grupos_selecionados_ordenados').dropna(subset=['grupos_selecionados_ordenados']))
+        else:
+            df_partes.append(df_habilidades[df_habilidades.tipo == key])
+
+    df_habilidades_concatenadas = pd.concat(df_partes) 
+
+    df_habilidades_concatenadas['nome'] = df_habilidades_concatenadas[f'nome_{idioma}']
+    df_habilidades_concatenadas['classe'] = df_habilidades_concatenadas[f'classe_{idioma}']
  
-    df_formacoes = carregar_dados(data_source, 'Formações', idioma, ['curso', 'instituicao', 'duracao', 'descricao','detalhe1','detalhe2','detalhe3','detalhe4','detalhe5'])
-    formacoes = processar_formacoes(df_formacoes,model['estrutura']['formacao'])
-    formacoes_complementares = processar_formacoes_complementares(df_formacoes,model['estrutura']['formacao_complementar'])
+    return df_habilidades_concatenadas.groupby(['classe', 'tipo'])['nome'].apply(' / '.join).reset_index().to_dict('records')
 
-
-    
-    df_habilidades_simples = pd.read_excel(f'{data_source}.xlsx', sheet_name='Habilidades')
-    df_classes = pd.read_excel(f'{data_source}.xlsx', sheet_name='Classes')
-    habilidades = processar_habilidades(df_habilidades_simples, df_classes, idioma,
-        {
-        'técnica' : model['estrutura']['habilidades_tecnicas'],
-        'comportamental' : model['estrutura']['habilidades_comportamentais'],
-        'idioma' : model['estrutura']['idiomas'],
-        }
-        )
+def process_sessoes(df, idioma,renomear=None):
  
-    
+    if renomear: 
+        renomear_partes = renomear.split(': ')
+        df.loc[df.alias== renomear_partes[0],[f'nome_{idioma}']]=renomear_partes[1]
+
+    return df.set_index(df.columns[1]).to_dict()[f'nome_{idioma}']
+ 
+def get_model_data(model,campo,parent='estrutura'):
+
+    if parent=='base':
+        if campo in model:
+            return model[campo]
+        else:
+            return []
+    else: 
+        if campo in model[parent]:
+            return model[parent][campo]
+        else:
+            return []
+
+def read_from_user_data_source(data_source, sheet_name, idioma, colunas):
+    df = pd.read_excel(f'{data_source}.xlsx', sheet_name=sheet_name)
+    for col in colunas:
+        df[col] = df[f'{col}_{idioma}']
+    return df
+
+def get_user_data(idioma,model):
+
+
+    data_source = 'dados_exemplo' if mostra_usuario()=='exemplo' else 'dados'
+     
+    df_titulos = read_from_user_data_source(data_source, 'Títulos', idioma, ['valor'])
+    df_cabecalho = read_from_user_data_source(data_source, 'Cabeçalho', idioma, ['rotulo', 'valor'])  
+    df_resumo = read_from_user_data_source(data_source, 'Resumo', idioma, ['texto'])
+    df_experiencias = read_from_user_data_source(data_source, 'Experiências', idioma, ['empresa', 'cargo', 'duracao', 'descricao','detalhe1','detalhe2','detalhe3','detalhe4','detalhe5'])
+    df_outros = read_from_user_data_source(data_source, 'Outros', idioma, ['descricao'])
+    df_formacoes = read_from_user_data_source(data_source, 'Formações', idioma, ['curso', 'instituicao', 'duracao', 'descricao','detalhe1','detalhe2','detalhe3','detalhe4','detalhe5'])    
+    df_habilidades_simples = read_from_user_data_source(data_source, 'Habilidades', idioma, ['nome'])
+    df_classes = read_from_user_data_source(data_source, 'Classes', idioma, ['classe'])
     df_sessoes = pd.read_excel(f'{data_source}.xlsx', sheet_name='Seções')
-    sessoes = processar_sessoes(df_sessoes, idioma)
+    model_cabecalho_titulo = get_model_data(model,'cabecalho') + get_model_data(model,'titulo')
+ 
+    
+    cabecalho = process_cabecalho(df_cabecalho,df_titulos, model_cabecalho_titulo)
+    resumo = process_resumo(df_resumo,get_model_data(model,'resumo'))
+
+    sessoes = process_sessoes(df_sessoes, idioma, get_model_data(model,'renomear','base'))
+
+    experiencias = process_experiencias(df_experiencias,get_model_data(model,'experiencias'))
+    experiencias_adicionais = process_experiencias_adicionais(df_experiencias,get_model_data(model,'experiencias_adicionais'))  
+    outros = process_historico(df_outros,get_model_data(model,'outros'),['duracao', 'descricao']) 
+    formacoes = process_formacoes(df_formacoes,get_model_data(model,'formacao'))
+    formacoes_complementares = process_formacoes_complementares(df_formacoes,get_model_data(model,'formacao_complementar')) 
+    habilidades = process_habilidades(df_habilidades_simples, df_classes, idioma,
+            {
+                'técnica' : get_model_data(model,'habilidades_tecnicas'),
+                'comportamental' : get_model_data(model,'habilidades_comportamentais'),
+                'idioma' : get_model_data(model,'idiomas'),
+            }
+        ) 
 
     return cabecalho, resumo, experiencias,experiencias_adicionais, formacoes,formacoes_complementares, outros, habilidades, sessoes
 
 
-@app.route('/')
-def home(idioma='pt'): 
-    model_data = transform()
+
+@app.route('/pasta')
+def pasta():
+    # Executa a GUI PyQt em um thread separado para abrir uma pasta
+    thread = threading.Thread(target=run_pyqt_app)
+    thread.start()
+    return redirect(url_for('usuarios'))
+
+@app.route('/planilha/<usuario>')
+def planilha(usuario):
+    # Executa a GUI PyQt em um thread separado para abrir um arquivo
+    #thread = threading.Thread(target=run_pyqt_app, args=(False,))
+    #thread.start()
+    base_folder = os.getenv('BASE_FOLDER')
+    data_source = 'dados_exemplo' if usuario.lower() == 'exemplo' else 'dados'
+    file_path = os.path.join(base_folder, data_source + '.xlsx').replace('\\\\', '\\')
+    os.startfile(file_path)
+    return redirect(url_for('usuarios'))
+
+
+def run_pyqt_app():
+    app = QApplication([])  # Inicializa a aplicação Qt sem passar 'sys.argv'
+
+    class PyQtApp(QWidget):
+        def __init__(self):
+            super().__init__() 
+            self.open_folder()  
+
+        def open_folder(self):
+            path = os.getenv('MODEL_FOLDER').replace('\\\\', '\\')
+            QProcess.startDetached('explorer', [path])
+ 
+            
+
+    ex = PyQtApp()
+    ex.close()  # Fecha a janela imediatamente
+    app.exec_()  # Executa o loop de eventos Qt
+
+
+@app.route('/usuarios',methods=['GET'])
+def usuarios(): 
+    return render_template('usuarios.html',html_titulo="GENCV - Usuários")
+
+
+@app.route('/define_usuario/<usuario>',methods=['GET'])
+def define_usuario(usuario): 
+    session['usuario'] = usuario
+    return redirect(url_for('versoes'))
+
+def mostra_usuario():
+    # Recupera o valor de 'usuario' da sessão
+    usuario = session.get('usuario', 'Nenhum usuário definido')
+    return  usuario.lower()
+
+@app.route('/versoes',methods=['GET'])
+def versoes(): 
+  
+    # Lista os arquivos no diretório
+    arquivos = os.listdir("modelos")   
+   
+
+    if session.get('usuario').lower() == 'exemplo':
+        arquivos =  [arq for arq in arquivos if arq.startswith('exemplo')]
+
+        
+    arquivos = [arq[:-4] for arq in arquivos if arq[-4:]=='.txt']
+
+
+    df_arquivos = pd.DataFrame([[arq,arq.split('_')[0],arq.split('_')[1]] for arq in arquivos])
  
 
-    idioma = model_data['idioma']
+    df_arquivos.columns = ['modelo_completo','modelo','idioma']
 
-    cabecalho, resumo, experiencias,experiencias_adicionais, formacoes,formacoes_complementares, outros, habilidades, sessoes  = get_user_data(idioma)
-  
+    dict_arquivos = df_arquivos.to_dict('records')
+
+    return render_template('versoes.html',
+        arquivos=dict_arquivos,
+        usuario=session.get('usuario'),
+        html_titulo="GENCV - Versões"
+        )
+
+
+@app.route('/cv/<cv_name>',methods=['GET'])
+def home(cv_name): 
+ 
+    global model_data
+ 
+    model_data = transform_idented_txt_to_json(cv_name)
+
+    with open('modelos/'+cv_name+'.json', 'r') as f:
+        model = json.load(f) 
+
+
+    user_data = get_user_data(model_data['idioma'],model)
+
+
+    if os.getenv("NOME") is not None and mostra_usuario()!='exemplo':
+        file_name = create_filename_hashed_suffix(os.getenv("NOME").replace(' ','_'), model_data['arquivo']) 
+    else:
+        file_name = create_filename_hashed_suffix("CURRICULO_FICTICIO_DE_EXEMPLO", model_data['arquivo'])  
+
+    if len(user_data) == 2 and user_data[0]==None:
+        return user_data[1]
+    else: 
+        cabecalho, resumo, experiencias,experiencias_adicionais, formacoes,formacoes_complementares, outros, habilidades, sessoes  = user_data
+    
     html_content =  render_template('curriculo.html', 
         user_data=cabecalho,  
         resumo=resumo,
@@ -524,27 +454,21 @@ def home(idioma='pt'):
         formacoes_complementares=formacoes_complementares,
         outros=outros,
         margem=model_data['margem'], 
-        file_name=model_data['arquivo'],
+        file_name= file_name,
         download_path=model_data['pasta_downloads'],
-        destination_path=model_data['pasta_curriculos'] 
+        destination_path=model_data['pasta_curriculos'],
+        usuario=mostra_usuario(),
+        html_titulo="GENCV - CV"
         )
+
+    file_path = os.path.join(os.getcwd(), 'curriculos', model_data['arquivo']+'.html')
+
+    with open(file_path, 'w', encoding='utf-8') as file:
+        file.write(html_content)
+ 
     return html_content
-   
-@app.route('/en')
-def index_en():
-    IDIOMA = 'en'
-    return home(IDIOMA)
+    
 
-@app.route('/pt')
-def index_pt():
-    IDIOMA = 'pt'
-    return home(IDIOMA)
-
-def create_app():
-    app = Flask(__name__)
-    # Configurações e registros de extensões aqui, se houver
-    return app
-
-if __name__ == '__main__':
+if __name__ == '__main__':  
     app.run(debug=True, port=9970)
  

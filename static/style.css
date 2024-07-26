@@ -3,6 +3,13 @@
   font-optical-sizing: auto; 
   font-style: normal;
 }
+
+:root {
+    --primary-button-color: #2563d5;
+    --primary-button-color-hover: #427ff1; 
+}
+
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -11,8 +18,12 @@ body {
     font-size: 10pt;
 
 }
+
+.opacity-0{
+    opacity: 0;
+}
 .no-print {
-            display: none;
+            display: none!important;
         }
 .center{
     text-align: center;
@@ -135,6 +146,7 @@ li b, div.flex-items b{
 {
     line-height: 1.1em;
     margin: 0px; 
+    max-width: 90%;
 }
 
 .section ul {
@@ -144,4 +156,172 @@ li b, div.flex-items b{
 } 
 .section ul li { 
     margin-left: 3em;
+}
+.title-date{
+    display: flex;
+     justify-content: space-between;
+     align-items: baseline; 
+}
+
+div.item div div p {
+    line-height: 1.2em;
+    margin-bottom: 0.5em;
+}
+span.b{
+    font-weight: 800; 
+}
+
+.item div div {
+    max-width: 90%;
+}
+
+#footer { 
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f4f4f4; /* Cor de fundo opcional */
+}
+
+#save-pdf {
+    background-color: var(--primary-button-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+#save-pdf:hover {
+    background-color: var(--primary-button-color-hover);
+}
+
+#usuario div {
+    background-color: var(--primary-button-color); 
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+ 
+}
+
+#usuario div:hover {
+    background-color: var(--primary-button-color-hover);
+    text-decoration: none;
+}
+
+#usuario  { 
+    text-decoration: none;
+}
+
+.user-info {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+}
+
+a.button: hover{
+    background-color: #007bff55;
+     text-decoration: none;
+}
+ 
+.button {
+    background-color: var(--primary-button-color);
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    margin: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    width: -webkit-fill-available;
+
+}
+.button:hover {
+    background-color: var(--primary-button-color-hover);
+     display: block;
+     text-decoration: none;
+}
+
+
+h1.versao {
+    font-size: 2rem;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+ 
+.versoes {
+    width: 60%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+        
+.versoes th, .versoes td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.versoes th {
+    background-color: #5591ff;
+    color: white;
+}
+
+table.dataTable thead th, table.dataTable thead td {
+    padding: 10px 18px;
+    border-bottom: 1px solid #fff!important;
+}
+
+table.dataTable.versoes tbody tr:hover td {
+    background-color: #e9ecef; /* Cor de fundo ao passar o mouse */
+}
+
+a.versao  {
+    text-decoration: none!important;
+    color: inherit; /* Herda a cor do elemento pai */
+    display: block; /* Faz o link abranger toda a linha */
+}
+
+table.dataTable.no-footer.versoes{
+    border: 0;
+}
+
+ 
+
+.dataTables_info {
+    text-align: center;
+    width: 100%;
+}
+
+.dataTables_wrapper .row:nth-child(2) {
+    display: flex;
+    justify-content: center;
+}
+
+#datatable_wrapper{
+padding: 2rem;
+}
+
+.centered-div{
+    text-align: center;
+    width: -webkit-fill-available;
 }

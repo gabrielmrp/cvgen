@@ -1,0 +1,90 @@
+{% extends "head.html" %}
+{% block fill %}
+<style type="text/css">
+table.dataTable>thead .sorting:before,
+table.dataTable>thead .sorting_asc:before,
+table.dataTable>thead .sorting_desc:before,
+table.dataTable>thead .sorting_asc_disabled:before,
+table.dataTable>thead .sorting_desc_disabled:before,
+table.dataTable>thead .sorting:after,
+table.dataTable>thead .sorting_asc:after,
+table.dataTable>thead .sorting_desc:after,
+table.dataTable>thead .sorting_asc_disabled:after,
+table.dataTable>thead .sorting_desc_disabled:after {
+    display: none
+}
+</style>
+<div class="controls">
+    <button id="save-pdf" class="opacity-0"></button>
+    <a href="{{ url_for('usuarios')}}" id="usuario">
+        <div class="user-info">Usuário: {{usuario}}</div>
+    </a>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="centered-div">
+            <h1 class='versao pt-2'>Versões dos Currículos</h1>
+        </div>
+    </div>
+    <table id="datatable" class="display versoes p-4">
+        <thead>
+            <tr>
+                <th>Modelo</th>
+                <th>Língua</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for arquivo in arquivos %}
+            <tr>
+                <td><a href="/cv/{{arquivo.modelo_completo}}" class="versao">{{arquivo.modelo}}</a></td>
+                <td><a href="/cv/{{arquivo.modelo_completo}}" class="versao">
+                        {% if arquivo.idioma == 'pt' %}
+                        <span class="fi fi-br"></span>
+                        {% else %}
+                        <span class="fi fi-gb"></span>
+                        {% endif %}
+                        {{ arquivo.idioma }}
+                    </a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<script>
+$(document).ready(function() {
+    $('#datatable').DataTable({
+        paging: false,
+        language: {
+            "decimal": "",
+            "emptyTable": "Nenhum dado disponível na tabela",
+            "info": "Mostrando _START_ até _END_ de _TOTAL_ registros",
+            "infoEmpty": "Mostrando 0 registros",
+            "infoFiltered": "(filtrado de _MAX_ total de registros)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar _MENU_ registros",
+            "loadingRecords": "Carregando...",
+            "processing": "Processando...",
+            "search": "Pesquisar:",
+            "zeroRecords": "Nenhum registro correspondente encontrado",
+            "paginate": {
+                "first": "Primeiro",
+                "last": "Último",
+                "next": "Próximo",
+                "previous": "Anterior"
+            },
+            "aria": {
+                "sortAscending": ": ativar para ordenar a coluna em ordem crescente",
+                "sortDescending": ": ativar para ordenar a coluna em ordem decrescente"
+            }
+        },
+        drawCallback: function() {
+            var info = $('#datatable_info').parent();
+            info.removeClass('col-sm-12');
+            info.removeClass('col-md-5');
+            info.addClass('col-md-12');
+        }
+    });
+});
+</script>
+{% endblock %}
