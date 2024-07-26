@@ -38,15 +38,14 @@
             "ccnm"
         ],
         "formacao_complementar": [
-            "hack",
             "adev",
             "aws",
             "ebd",
             "isa",
             "mlb"
         ],
-        "habilidades_tecnicas": [ 
-            "base", 
+        "habilidades_tecnicas": [
+            "base",
             "py",
             "pyds",
             "eng",
@@ -59,10 +58,9 @@
         "idiomas": [
             "base"
         ],
-        "outros": [ 
+        "outros": [
             "dbj",
-            "tel" 
-            "dbj" 
+            "tel"
         ]
     },
     "renomear": "outros: Projetos Pessoais"

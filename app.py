@@ -400,15 +400,16 @@ def versoes():
 
     if session.get('usuario').lower() == 'exemplo':
         arquivos =  [arq for arq in arquivos if arq.startswith('exemplo')]
-
+    else:
+        arquivos =  [arq for arq in arquivos if arq.startswith('exemplo') == False]
         
     arquivos = [arq[:-4] for arq in arquivos if arq[-4:]=='.txt']
-
-
-    df_arquivos = pd.DataFrame([[arq,arq.split('_')[0],arq.split('_')[1]] for arq in arquivos])
  
+    df_arquivos = pd.DataFrame([[arq,arq.split('_')[0],arq.split('_')[1]] for arq in arquivos],columns=['modelo_completo','modelo','idioma'])
 
-    df_arquivos.columns = ['modelo_completo','modelo','idioma']
+    if df_arquivos.empty and session.get('usuario').lower() != 'exemplo':
+        return render_template('mensagens.html',
+            message='copie manualmente o arquivo na pasta modelos "exemplo_pt.txt" para o arquivo "cargo_pt.txt" e realize as alterações devidas') 
 
     dict_arquivos = df_arquivos.to_dict('records')
 
