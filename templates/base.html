@@ -11,7 +11,7 @@
             <div class="user-info">Usuário: {{usuario}}</div>
         </a>
     </div>
-
+ 
     <script>
     document.getElementById('save-pdf').addEventListener('click', () => {
             const element = document.body;
@@ -65,17 +65,15 @@
             document.getElementById('save-pdf').classList.remove('no-print');
             document.getElementById('footer').classList.remove('no-print');
             document.getElementById('controls').classList.remove('no-print');
-            document.getElementById('usuario').classList.remove('no-print');
-
-            
+            document.getElementById('usuario').classList.remove('no-print'); 
             // Make a POST request to the Flask server to move the PDF
             setTimeout(() => {
-                fetch('http://127.0.0.1:9970/move-pdf', {
-                    method: 'POST', 
+                fetch('http://127.0.0.1:9970/move-pdf', { 
+                    method: 'POST',   
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
+                    body: JSON.stringify({ 
                         file_name: '{{ file_name }}' 
                     })
                 })
@@ -96,4 +94,25 @@
     <main>
     {% block content %}{% endblock %}
     </main>  
-{% endblock %}
+{% endblock %} 
+                        file_name: '{{ file_name }}',
+                        download_path: '{{ download_path }}',
+                        destination_path: '{{ destination_path }}'
+                    })
+                })
+                .then(response => response.text())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+            }, 3000);
+        });
+    });
+});
+        </script>
+        <main>
+        {% block content %}{% endblock %}
+        </main>
+        <footer id="footer">
+            <span>&copy; 2024 GAMARP</span>
+        </footer>
+    </body>
+</html> 
