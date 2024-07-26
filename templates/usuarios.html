@@ -1,0 +1,43 @@
+{% extends "head.html" %}
+{% block fill %}
+ 
+ 
+ <div class="controls">
+            <button id="save-pdf" class="opacity-0"></button>
+            <a href=""  id="usuario" class="opacity-0">
+                <div class="user-info" >Usuário: {{usuario}}</div>
+            </a>
+        </div>
+     <div class="container">
+        <div class="row">
+            <div class="centered-div">
+                <h1 class='versao pt-2'>Usuários</h1>
+            </div> 
+    </div>
+    <div class="row">
+        <div class="col-md-6"> 
+            <a href="{{ url_for('define_usuario', usuario='Exemplo')}}" class="button">Exemplo</a>
+        </div>
+        <div class="col-md-3">
+             <a href="{{ url_for('pasta')}}" class="button">Pasta</a>
+        </div> 
+        <div class="col-md-3">
+             <a href="{{ url_for('planilha', usuario='Exemplo')}}" class="button">Planilha</a>
+        </div> 
+    </div> 
+    <div class="row">
+    <div class="col-md-6">  
+        <a href="{{ url_for('define_usuario', usuario='Usuário')}}" class="button">Usuário</a>
+        </div> 
+        <div class="col-md-3">
+             <a href="{{ url_for('pasta')}}" class="button">Pasta</a>
+        </div> 
+        <div class="col-md-3">
+             <a href="{{ url_for('planilha', usuario='Usuário')}}" class="button">Planilha</a>
+        </div>
+    </div> 
+    </div> 
+
+
+ 
+{% endblock %} 

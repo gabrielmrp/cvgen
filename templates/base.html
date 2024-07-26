@@ -1,72 +1,99 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Currículo</title>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script> 
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
-    </head>
-    <body>
-        <style type="text/css">
+{% extends "head.html" %}
+{% block fill %}
+    <style type="text/css">
             body {
         font-family: Arial, sans-serif;
         font-size: 10pt; /* Adjust the base font size */
-    }
-        </style>
-        <div class="controls">
+    } </style>
+    <div class="controls" id="controls">
         <button id="save-pdf">Save as PDF</button>
-        </div>
+        <a href="{{ url_for('usuarios')}}" id="usuario">
+            <div class="user-info">Usuário: {{usuario}}</div>
+        </a>
+    </div>
 
-        <script>
-            document.getElementById('save-pdf').addEventListener('click', () => {
-                const element = document.body;
-                const opt = {
-                    margin:       [10, 0, {{margem}}, 0] ,
-                    filename:     '{{ file_name }}',
-                    image:        { type: 'jpeg', quality: 1 },
-                    html2canvas:  { scale: 3},
-                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-                };
+    <script>
+    document.getElementById('save-pdf').addEventListener('click', () => {
+            const element = document.body;
+            const opt = {
+                margin: [10, 0, {{margem}}, 0],
+                filename: '{{ file_name }}',
+                image: { type: 'jpeg', quality: 1 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
 
-                document.getElementById('save-pdf').classList.add('no-print');
-                document.getElementById('footer').classList.add('no-print');
-                // New Promise-based usage:
-                html2pdf().from(element).set(opt).save().then(() => {
-                    // Remove the 'no-print' class after the PDF is generated
-                document.getElementById('save-pdf').classList.remove('no-print');
-                document.getElementById('footer').classList.remove('no-print');
-                    // Make a POST request to the Flask server to move the PDF
+            document.getElementById('save-pdf').classList.add('no-print');
+            document.getElementById('footer').classList.add('no-print');
+            document.getElementById('usuario').classList.add('no-print');
+            document.getElementById('controls').classList.add('no-print');
 
-                setTimeout(() => {
-                    fetch('http://127.0.0.1:9970/move-pdf', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            file_name: '{{ file_name }}',
-                            download_path: '{{ download_path }}',
-                            destination_path: '{{ destination_path }}'
-                        })
-                    })
-                    .then(response => response.text())
-                    .then(data => console.log(data))
-                    .catch(error => console.error('Error:', error));
-                }, 3000);    
+            pdf = html2pdf().from(element).set(opt).toPdf().get('pdf').then(function (pdf) {
+                const totalPages = pdf.internal.getNumberOfPages();
+                
+                // Function to check if a page is blank
+                function isPageBlank(pageNumber) {
+                    pdf.setPage(pageNumber);
+                    const pageContent = pdf.internal.pages[pageNumber].join('').trim();
+                    return pageContent.length === 0;
+                }
+         
 
+                // Get the updated total number of pages after possibly removing the last page
+                const updatedTotalPages = pdf.internal.getNumberOfPages();
 
+                if (updatedTotalPages > 2) {
+                    const userConfirmed = confirm('O PDF possui mais de 2 páginas. Deseja considerar só as 2 primeiras?');
+                    if (!userConfirmed) {
+                        document.getElementById('save-pdf').classList.remove('no-print');
+                        document.getElementById('controls').classList.remove('no-print')
+                        document.getElementById('footer').classList.remove('no-print');
+                        document.getElementById('usuario').classList.remove('no-print');
+                    //return;
+                    }
+                    else{
+                        pdf.deletePage(totalPages);
+                    }
+                }
+
+                // Save the PDF and then proceed with post-generation steps
+         
             });
+
+           pdf.save(opt.filename).then( () => {  
+            // Remove the 'no-print' class after the PDF is generated
+            document.getElementById('save-pdf').classList.remove('no-print');
+            document.getElementById('footer').classList.remove('no-print');
+            document.getElementById('controls').classList.remove('no-print');
+            document.getElementById('usuario').classList.remove('no-print');
+
+            
+            // Make a POST request to the Flask server to move the PDF
+            setTimeout(() => {
+                fetch('http://127.0.0.1:9970/move-pdf', {
+                    method: 'POST', 
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        file_name: '{{ file_name }}' 
+                    })
+                })
+                .then(response =>{ if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                else{
+                                    console.log('s')
+                                }
+                                return response.json();})
+                .then(data => console.log(data))
+                .catch(error => console.error(error));
+            }, 3000);
         });
-        </script>
-        <main>
-        {% block content %}{% endblock %}
-        </main>
-        <footer id="footer">
-            <span>&copy; 2024 GAMARP</span>
-        </footer>
-    </body>
-</html>
+
+    });
+   </script>
+    <main>
+    {% block content %}{% endblock %}
+    </main>  
+{% endblock %}
