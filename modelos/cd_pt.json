@@ -45,8 +45,8 @@
             "isa",
             "mlb"
         ],
-        "habilidades_tecnicas": [
-            "base",
+        "habilidades_tecnicas": [ 
+            "base", 
             "py",
             "pyds",
             "eng",
@@ -59,9 +59,10 @@
         "idiomas": [
             "base"
         ],
-        "outros": [
+        "outros": [ 
             "dbj",
-            "tel"
+            "tel" 
+            "dbj" 
         ]
     },
     "renomear": "outros: Projetos Pessoais"

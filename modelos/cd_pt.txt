@@ -36,15 +36,14 @@ estrutura
 		kfa 
 		belo
 		ccnm
-	formacao_complementar
-		hack
+	formacao_complementar 
 		adev 
 		aws
 		ebd 
 		isa
 		mlb 
-	habilidades_tecnicas  
-		base
+	habilidades_tecnicas   
+		base 
 		py
 		pyds
 		eng
@@ -55,7 +54,7 @@ estrutura
 	idiomas 
 		base 
 	outros
-		dbj
+		dbj 
 		tel
 renomear
-	outros: Projetos Pessoais
+	outros: Projetos Pessoais 

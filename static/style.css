@@ -160,7 +160,7 @@ li b, div.flex-items b{
 .title-date{
     display: flex;
      justify-content: space-between;
-     align-items: baseline; 
+     align-items: baseline;  
 }
 
 div.item div div p {
@@ -324,4 +324,5 @@ padding: 2rem;
 .centered-div{
     text-align: center;
     width: -webkit-fill-available;
+ 
 }
