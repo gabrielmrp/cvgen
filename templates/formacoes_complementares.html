@@ -1,0 +1,20 @@
+<div class="section alias" name="formacoes_complementares">
+    <h2 class="detalhes section_title" id="formacoes_complementares" title="{{titulos.sessoes.formacoes}}">{{sessoes.formacoes_complementares}}</h2>
+    {% for formacoes_complementares in formacoes_complementares %} 
+    <div class="item alias"  title="{{ formacoes_complementares.alias}}">
+        <div class="title-date">
+            <div><h3 class="item" ><b  class="detalhes" id="formacoes_complementares_curso" title="{{ titulos.formacoes_complementares_curso}}" >{{ formacoes_complementares.curso }}</b> <span class='where detalhes' id="formacoes_complementares_instituicao" title="{{ titulos.formacoes_complementares_instituicao}}">{{ formacoes_complementares.instituicao }}</span></h3></div><div><span style="margin: 0;" id="formacoes_complementares_duracao" title="{{ titulos.formacoes_complementares_duracao }}" class="detalhes">{{ formacoes_complementares.duracao }}</span></div>
+        </div> 
+        <p class="detalhes" id="formacoes_descricao" title="{{ titulos.formacoes_descricao }}">{{ formacoes_complementares.descricao }}</p>
+        {% if formacoes_complementares.tem_detalhe %}
+            <ul>
+                {% if formacoes_complementares.detalhe1 != '' %} <li><span id="formacoes_detalhe1" title="{{ titulos.formacoes_detalhe1}}" class="detalhes">{{ formacoes_complementares.detalhe1 }}</span>{{ formacoes_complementares.detalhe1 }}</span></li>{% endif %} 
+                {% if formacoes_complementares.detalhe2 != '' %} <li><span id="formacoes_detalhe2" title="{{ titulos.formacoes_detalhe2}}" class="detalhes">{{ formacoes_complementares.detalhe2 }}</span>{{ formacoes_complementares.detalhe2 }}</span></li>{% endif %} 
+                {% if formacoes_complementares.detalhe3 != '' %} <li><span id="formacoes_detalhe3" title="{{ titulos.formacoes_detalhe3}}" class="detalhes">{{ formacoes_complementares.detalhe3 }}</span>{{ formacoes_complementares.detalhe3 }}</span></li>{% endif %} 
+                {% if formacoes_complementares.detalhe4 != '' %} <li><span id="formacoes_detalhe4" title="{{ titulos.formacoes_detalhe4}}" class="detalhes">{{ formacoes_complementares.detalhe4 }}</span>{{ formacoes_complementares.detalhe4 }}</span></li>{% endif %} 
+                {% if formacoes_complementares.detalhe5 != '' %} <li><span id="formacoes_detalhe5" title="{{ titulos.formacoes_detalhe5}}" class="detalhes">{{ formacoes_complementares.detalhe5 }}</span>{{ formacoes_complementares.detalhe5 }}</span></li>{% endif %} 
+            </ul>
+            {% endif %}  
+    </div> 
+    {% endfor %}  
+</div>

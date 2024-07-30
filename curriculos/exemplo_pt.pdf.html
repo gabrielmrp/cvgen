@@ -23,7 +23,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     
 </head>
-<body>
+<body> 
     
     <body> 
     <style type="text/css">
@@ -43,7 +43,7 @@
             const element = document.body;
             const opt = {
                 margin: [10, 0, 0, 0],
-                filename: 'CURRICULO_FICTICIO_DE_EXEMPLO_20240725NHR.pdf',
+                filename: 'CURRICULO_FICTICIO_DE_EXEMPLO_20240729NHR.pdf',
                 image: { type: 'jpeg', quality: 1 },
                 html2canvas: { scale: 2 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
@@ -100,7 +100,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ 
-                        file_name: 'CURRICULO_FICTICIO_DE_EXEMPLO_20240725NHR.pdf' 
+                        file_name: 'CURRICULO_FICTICIO_DE_EXEMPLO_20240729NHR.pdf' 
                     })
                 })
                 .then(response =>{ if (!response.ok) {
@@ -117,16 +117,67 @@
 
     }); 
         </script> 
-        <main> 
+        <main>
+            <div class="d-none" id="planilha">dados_exemplo.xlsx</div>
+            <div class="d-none" id="modelo">exemplo_pt</div>
+             <div class="d-none" id="idioma">pt</div>
             
     <div class="container"> 
         
-            <div class="header">
+            <style type="text/css">
+    /* Estilos para o modal */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgb(0,0,0); 
+            background-color: rgba(0,0,0,0.4); 
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto; 
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+</style>
+<div class="alias"  title="">
+<div class="header">
     
-        <h1>Gustavo Louveiro Santos Silva e Souza</h1>
+        <h1 id='nome' title="planilha:Cabeçalho/nome/valor;arquivo:estrutura/cabecalho/nome" class="detalhes">Gustavo Louveiro Santos Silva e Souza</h1>
+        <!-- O Modal
+    <div id="myModal" class="modal">
+        <div class="modal-content"> 
+            <p class="close">&times;</p>
+            <h2>Localização do conteúdo na planilha:</h2>
+            <p id="modalText1"></p>  
+            <p id="modalText2"></p>
+        </div>
+    </div> -->
     
     
-        <h2>DESENVOLVEDOR FULL STACK</h2>
+        <h2 id='titulo' title="planilha:Títulos/titulo/valor;arquivo:estrutura/cabecalho/titulo"  class="detalhes">DESENVOLVEDOR FULL STACK</h2>
     
 </div>
 
@@ -134,236 +185,242 @@
     <div class="" style="display: flex; justify-content: space-between;">
         <div>
             
-                <h3>Cidade: Ribeiranópolis, MG </h3>
+                <h3><span id='cidade' title="planilha:Cabeçalho/cidade/valor;arquivo:estrutura/cabecalho/cidade"  class="detalhes">Cidade: Ribeiranópolis, </span><span id='uf' title="planilha:Cabeçalho/uf/valor;arquivo:estrutura/cabecalho/uf"  class="detalhes">MG </h3>
             
         </div>
         <div> 
-         <h3>Telefone: +5531999999999
-         , E-mail: glouvsss2024@gmail.com</h3> 
+         <h3>
+         <span id='telefone' title="planilha:Cabeçalho/telefone/valor;arquivo:estrutura/cabecalho/telefone"  class="detalhes">Telefone: +5531999999999
+         </span>
+        <span id='email' title="planilha:Cabeçalho/email/valor;arquivo:estrutura/cabecalho/email"  class="detalhes">
+         , E-mail: glouvsss2024@gmail.com
+        </span></h3> 
         </div>  
     </div>
     <div class="" style="display: flex; justify-content: space-between;">
         <div>
             
-                <h3>Linkedin: <a href="https://www.linkedin.com/in/glouvsss" target="_blank">https://www.linkedin.com/in/glouvsss</a></h3>
+                <h3  id='linkedin' title="planilha:Cabeçalho/linkedin/valor;arquivo:estrutura/cabecalho/linkedin"  class="detalhes" >Linkedin: <a href="https://www.linkedin.com/in/glouvsss" target="_blank">https://www.linkedin.com/in/glouvsss</a></h3>
             
         </div>
         <div>
             
-                <h3>Portifólio: <a href="https://www.github.com/glouvss" target="_blank">https://www.github.com/glouvss</a></h3>
+                <h3  id='url' title="planilha:Cabeçalho/url/valor;arquivo:estrutura/cabecalho/url"  class="detalhes" >Portifólio: <a href="https://www.github.com/glouvss" target="_blank">https://www.github.com/glouvss</a></h3>
             
         </div>
     </div>
 </div>
+ 
 
-    
-
-<div class="section resumo"> 
-    <h2 class='resumo'>Sou um desenvolvedor full stack que possui vasta experiência no ciclo completo de desenvolvimento de sistemas</h2>
+<div class="section resumo alias" title="main"> 
+    <h2 id='resumo'  title="planilha:Resumo/alias/valor;arquivo:estrutura/resumo" class="resumo detalhes">Sou um desenvolvedor full stack que possui vasta experiência no ciclo completo de desenvolvimento de sistemas</h2>
+</div>
 </div>
         
         
         
-            <div class="section" name="formacao">
-    <h2>FORMAÇÃO</h2>
+            <div class="section alias" name="formacoes">
+    <h2 class="detalhes  section_title" id="formacoes" title="Movimente a seção alterando sua ordem em &#39;modelo.txt&#39; | Altere seu nome localizando renomear e indicando com a sintaxe &#39;nome : novonome&#39;">FORMAÇÃO</h2>
     
     
-    <div class="item">
+    <div class="item alias" title="grad">
         <div class="title-date">
-            <div><h3 class="item" ><b>Graduado em Engenharia de Sistemas</b> <span class='where'>Universidade Federal Líbero Badaró (UFLB)</span></h3></div><div><span style="margin: 0;">Ago 2007 - Jan 2014</span></div>
+            <div><h3 class="item" ><b class="detalhes" id="formacoes_curso" title="planilha:Formações/alias/curso;arquivo:estrutura/formacoes/alias" >Graduado em Engenharia de Sistemas</b> <span class='where detalhes' id="formacoes_instituicao" title="planilha:Formações/alias/instituicao;arquivo:estrutura/formacoes/alias">Universidade Federal Líbero Badaró (UFLB)</span></h3></div><div><span style="margin: 0;" id="formacoes_duracao" title="planilha:Formações/alias/duracao;arquivo:estrutura/formacoes/alias" class="detalhes">Ago 2007 - Jan 2014</span></div>
         </div>   
-        <p>Tema de Conclusão:Transformação Digital e Inovação: O Papel do Desenvolvedor Full Stack na Implementação de Soluções Integradas e Sustentáveis.</p>
-         
+        <p class="detalhes" id="formacoes_descricao" title="planilha:Formações/alias/descricao;arquivo:estrutura/formacoes/alias">Tema de Conclusão:Transformação Digital e Inovação: O Papel do Desenvolvedor Full Stack na Implementação de Soluções Integradas e Sustentáveis.</p>
+        
+            <ul>
+                 <li><span id="formacoes_detalhe1" title="planilha:Formações/alias/detalhe1;arquivo:estrutura/formacoes/alias" class="detalhes">a</span></li> 
+                 <li><span id="formacoes_detalhe2" title="planilha:Formações/alias/detalhe2;arquivo:estrutura/formacoes/alias" class="detalhes">b</span></li> 
+                 <li><span id="formacoes_detalhe3" title="planilha:Formações/alias/detalhe3;arquivo:estrutura/formacoes/alias" class="detalhes">c</span></li> 
+                 <li><span id="formacoes_detalhe4" title="planilha:Formações/alias/detalhe4;arquivo:estrutura/formacoes/alias" class="detalhes">d</span></li> 
+                 <li><span id="formacoes_detalhe5" title="planilha:Formações/alias/detalhe5;arquivo:estrutura/formacoes/alias" class="detalhes">e</span></li> 
+            </ul>
+             
     </div>
      
       
 </div>
         
-            <div class="section" name="experiencias">
-    <h2>EXPERIÊNCIA PROFISSIONAL</h2>
+            <div class="section alias" name="experiencias">
+    <h2 class="detalhes  section_title" id="experiencias" title="Movimente a seção alterando sua ordem em &#39;modelo.txt&#39; | Altere seu nome localizando renomear e indicando com a sintaxe &#39;nome : novonome&#39;">EXPERIÊNCIA PROFISSIONAL</h2>
      
-    <div class="item">
+    <div class="item alias" title="nov">
         <div class="title-date">
-             <div><h3 class="item" ><b>Desenvolvedor Full Stack como Freelancer </b> <span class='where'>Novid: </span></h3></div>  
+             <div><h3 class="item" ><b class="detalhes" id="experiencia_cargo" title="planilha:Experiências/alias/cargo;arquivo:estrutura/experiencia/alias" >Desenvolvedor Full Stack como Freelancer </b> <span class='where detalhes' id="experiencia_empresa" title="planilha:Experiências/alias/empresa;arquivo:estrutura/experiencia/alias">Novid: </span></h3></div>  
         <!--<span class="item"><i></i></span>  --> 
-        <div><span style="margin: 0;">2024</span></div></div>
-        <p>Desenvolvi aplicações web usando JavaScript, Node.js, React e MongoDB para garantir segurança e performance.</p>
+        <div><span style="margin: 0;" id="experiencia_duracao" title="planilha:Experiências/alias/duracao;arquivo:estrutura/experiencia/alias" class="detalhes">2024</span></div></div>
+        <p class="detalhes" id="experiencia_descricao" title="planilha:Experiências/alias/descricao;arquivo:estrutura/experiencia/alias">Desenvolvi aplicações web usando JavaScript, Node.js, React e MongoDB para garantir segurança e performance.</p>
             
-            <ul>
-                 <li><span>Desenvolvimento</span></li> 
-                 <li><span>Testes de Integração</span></li> 
-                 <li><span>Melhoria em 14% da performance</span></li> 
-                 <li><span>Testes de segurança</span></li> 
-                 
+            <ul> 
+                 <li><span id="experiencia_detalhe1" title="planilha:Experiências/alias/detalhe1;arquivo:estrutura/experiencia/alias" class="detalhes">Desenvolvimento</span></li> 
+                 <li><span id="experiencia_detalhe2" title="planilha:Experiências/alias/detalhe2;arquivo:estrutura/experiencia/alias" class="detalhes">Testes de Integração</span></li> 
+                 <li><span id="experiencia_detalhe3" title="planilha:Experiências/alias/detalhe3;arquivo:estrutura/experiencia/alias" class="detalhes">Melhoria em 14% da performance</span></li> 
+                 <li><span id="experiencia_detalhe4" title="planilha:Experiências/alias/detalhe4;arquivo:estrutura/experiencia/alias" class="detalhes">Testes de segurança</span></li> 
+                 <li><span id="experiencia_detalhe5" title="planilha:Experiências/alias/detalhe5;arquivo:estrutura/experiencia/alias" class="detalhes">a</span></li> 
             </ul>
               
      </div> 
      
-    <div class="item">
+    <div class="item alias" title="luna">
         <div class="title-date">
-             <div><h3 class="item" ><b>Desenvolvedor Back End como Freelancer</b> <span class='where'>LunaTech: </span></h3></div>  
+             <div><h3 class="item" ><b class="detalhes" id="experiencia_cargo" title="planilha:Experiências/alias/cargo;arquivo:estrutura/experiencia/alias" >Desenvolvedor Back End como Freelancer</b> <span class='where detalhes' id="experiencia_empresa" title="planilha:Experiências/alias/empresa;arquivo:estrutura/experiencia/alias">LunaTech: </span></h3></div>  
         <!--<span class="item"><i></i></span>  --> 
-        <div><span style="margin: 0;">2022 - 2024</span></div></div>
-        <p>Construi APIs robustas com Python, Django, integrei MySQL e PostgreSQL, escalando sistemas para diversos clientes.</p>
+        <div><span style="margin: 0;" id="experiencia_duracao" title="planilha:Experiências/alias/duracao;arquivo:estrutura/experiencia/alias" class="detalhes">2022 - 2024</span></div></div>
+        <p class="detalhes" id="experiencia_descricao" title="planilha:Experiências/alias/descricao;arquivo:estrutura/experiencia/alias">Construi APIs robustas com Python, Django, integrei MySQL e PostgreSQL, escalando sistemas para diversos clientes.</p>
               
      </div> 
      
-    <div class="item">
+    <div class="item alias" title="aqn">
         <div class="title-date">
-             <div><h3 class="item" ><b>Analista de Dados</b> <span class='where'>Aquino &amp; Silva: </span></h3></div>  
+             <div><h3 class="item" ><b class="detalhes" id="experiencia_cargo" title="planilha:Experiências/alias/cargo;arquivo:estrutura/experiencia/alias" >Analista de Dados</b> <span class='where detalhes' id="experiencia_empresa" title="planilha:Experiências/alias/empresa;arquivo:estrutura/experiencia/alias">Aquino &amp; Silva: </span></h3></div>  
         <!--<span class="item"><i></i></span>  --> 
-        <div><span style="margin: 0;">2022</span></div></div>
-        <p>Coletei, limpei e analisei dados usando Python, R, SQL; criei relatórios e visualizações com Tableau e Power BI para insights estratégicos.</p>
+        <div><span style="margin: 0;" id="experiencia_duracao" title="planilha:Experiências/alias/duracao;arquivo:estrutura/experiencia/alias" class="detalhes">2022</span></div></div>
+        <p class="detalhes" id="experiencia_descricao" title="planilha:Experiências/alias/descricao;arquivo:estrutura/experiencia/alias">Coletei, limpei e analisei dados usando Python, R, SQL; criei relatórios e visualizações com Tableau e Power BI para insights estratégicos.</p>
               
      </div> 
      
-    <div class="item">
+    <div class="item alias" title="eco">
         <div class="title-date">
-             <div><h3 class="item" ><b>Estágio em Desenvolvimento Full-Stack    </b> <span class='where'>EcoEsfera: </span></h3></div>  
+             <div><h3 class="item" ><b class="detalhes" id="experiencia_cargo" title="planilha:Experiências/alias/cargo;arquivo:estrutura/experiencia/alias" >Estágio em Desenvolvimento Full-Stack    </b> <span class='where detalhes' id="experiencia_empresa" title="planilha:Experiências/alias/empresa;arquivo:estrutura/experiencia/alias">EcoEsfera: </span></h3></div>  
         <!--<span class="item"><i></i></span>  --> 
-        <div><span style="margin: 0;">2020 - 2022</span></div></div>
-        <p>Contribui com interfaces responsivas e APIs usando HTML, CSS, JavaScript; participo de revisões com Git e testo com Jest e Mocha.</p>
+        <div><span style="margin: 0;" id="experiencia_duracao" title="planilha:Experiências/alias/duracao;arquivo:estrutura/experiencia/alias" class="detalhes">2020 - 2022</span></div></div>
+        <p class="detalhes" id="experiencia_descricao" title="planilha:Experiências/alias/descricao;arquivo:estrutura/experiencia/alias">Contribui com interfaces responsivas e APIs usando HTML, CSS, JavaScript; participo de revisões com Git e testo com Jest e Mocha.</p>
               
      </div> 
      
-</div>
+</div> 
         
-            <div class="section" name="experiencias_adicionais">
-    <h2>OUTRAS ATIVIDADES PROFISSIONAIS</h2>
+            <div class="section alias" name="experiencias_adicionais">
+    <h2 class="detalhes section_title" id="experiencias" title="Movimente a seção alterando sua ordem em &#39;modelo.txt&#39; | Altere seu nome localizando renomear e indicando com a sintaxe &#39;nome : novonome&#39;">OUTRAS ATIVIDADES PROFISSIONAIS</h2>
      
-    <div class="item">
+    <div class="item alias" title="yop">
         <div class="title-date">
-             <div><h3 class="item" ><b>Cientista de Dados</b> <span class='where'>Yoppi: </span></h3></div>  
+             <div><h3 class="item" ><b class="detalhes" id="experiencia_adicional_cargo" title="planilha:Experiências/alias/cargo_adicional.pt;arquivo:estrutura/experiencia/alias" >Cientista de Dados</b> <span class='where detalhes' id="experiencia_adicional_empresa" title="planilha:Experiências/alias/empresa_adicional.pt;arquivo:estrutura/experiencia/alias">Yoppi: </span></h3></div>  
         <!--<span class="item"><i></i></span>  --> 
-        <span style="margin: 0;">2019</span></div>    
-    <p>Apliquei machine learning com Python, TensorFlow; realizo análise de dados com pandas, matplotlib, gerando insights preditivos para decisões informadas.</p>
+        <span style="margin: 0;" id="experiencia_adicional_duracao" title="planilha:Experiências/alias/duracao_adicional;arquivo:estrutura/experiencia_adicional/alias" class="detalhes">2019</span></div>    
+    <p class="detalhes" id="experiencia_adicional_descricao" title="planilha:Experiências/alias/descricao_adicional;arquivo:estrutura/experiencia_adicional/alias">Apliquei machine learning com Python, TensorFlow; realizo análise de dados com pandas, matplotlib, gerando insights preditivos para decisões informadas.</p>
          
      </div> 
      
-    <div class="item">
+    <div class="item alias" title="pipa">
         <div class="title-date">
-             <div><h3 class="item" ><b>Bolsista e Pesquisador em Redes Sociais</b> <span class='where'>PIPA/UFLB: </span></h3></div>  
+             <div><h3 class="item" ><b class="detalhes" id="experiencia_adicional_cargo" title="planilha:Experiências/alias/cargo_adicional.pt;arquivo:estrutura/experiencia/alias" >Bolsista e Pesquisador em Redes Sociais</b> <span class='where detalhes' id="experiencia_adicional_empresa" title="planilha:Experiências/alias/empresa_adicional.pt;arquivo:estrutura/experiencia/alias">PIPA/UFLB: </span></h3></div>  
         <!--<span class="item"><i></i></span>  --> 
-        <span style="margin: 0;">2017-2019</span></div>    
-    <p>Coletando e analisando dados de redes sociais com Netvizz, NodeXL; contribuindo para pesquisas sobre comportamento online e interações sociais.</p>
+        <span style="margin: 0;" id="experiencia_adicional_duracao" title="planilha:Experiências/alias/duracao_adicional;arquivo:estrutura/experiencia_adicional/alias" class="detalhes">2017-2019</span></div>    
+    <p class="detalhes" id="experiencia_adicional_descricao" title="planilha:Experiências/alias/descricao_adicional;arquivo:estrutura/experiencia_adicional/alias">Coletando e analisando dados de redes sociais com Netvizz, NodeXL; contribuindo para pesquisas sobre comportamento online e interações sociais.</p>
          
      </div> 
      
 </div>  
         
-            <div class="section" name="formacao_complementar">
-    <h2>FORMAÇÃO COMPLEMENTAR</h2>
+            <div class="section alias" name="formacoes_complementares">
+    <h2 class="detalhes section_title" id="formacoes_complementares" title="Movimente a seção alterando sua ordem em &#39;modelo.txt&#39; | Altere seu nome localizando renomear e indicando com a sintaxe &#39;nome : novonome&#39;">FORMAÇÃO COMPLEMENTAR</h2>
      
-    <div class="item">
+    <div class="item alias"  title="mic">
         <div class="title-date">
-            <div><h3 class="item" ><b>Curso Avançado em Desenvolvimento Web Full Stack</b> <span class='where'>MicroAdvance</span></h3></div><div><span style="margin: 0;">2020</span></div>
+            <div><h3 class="item" ><b  class="detalhes" id="formacoes_complementares_curso" title="planilha:Formações/alias/curso;arquivo:estrutura/formacoes_complementares/alias" >Curso Avançado em Desenvolvimento Web Full Stack</b> <span class='where detalhes' id="formacoes_complementares_instituicao" title="planilha:Formações/alias/instituicao;arquivo:estrutura/formacoes_complementares/alias">MicroAdvance</span></h3></div><div><span style="margin: 0;" id="formacoes_complementares_duracao" title="planilha:Formações/alias/duracao;arquivo:estrutura/formacoes_complementares/alias" class="detalhes">2020</span></div>
         </div> 
-        <p>Este curso abrange conceitos avançados tanto de desenvolvimento front-end quanto back-end, focando em frameworks, bancos de dados e práticas de segurança.</p>
+        <p class="detalhes" id="formacoes_descricao" title="planilha:Formações/alias/descricao;arquivo:estrutura/formacoes/alias">Este curso abrange conceitos avançados tanto de desenvolvimento front-end quanto back-end, focando em frameworks, bancos de dados e práticas de segurança.</p>
           
     </div> 
      
-    <div class="item">
+    <div class="item alias"  title="fer">
         <div class="title-date">
-            <div><h3 class="item" ><b>Certificação em Análise de Dados e Visualização</b> <span class='where'>FERVESP</span></h3></div><div><span style="margin: 0;">2018 - 2019</span></div>
+            <div><h3 class="item" ><b  class="detalhes" id="formacoes_complementares_curso" title="planilha:Formações/alias/curso;arquivo:estrutura/formacoes_complementares/alias" >Certificação em Análise de Dados e Visualização</b> <span class='where detalhes' id="formacoes_complementares_instituicao" title="planilha:Formações/alias/instituicao;arquivo:estrutura/formacoes_complementares/alias">FERVESP</span></h3></div><div><span style="margin: 0;" id="formacoes_complementares_duracao" title="planilha:Formações/alias/duracao;arquivo:estrutura/formacoes_complementares/alias" class="detalhes">2018 - 2019</span></div>
         </div> 
-        <p>Desenvolvimento de um sistema de controle de estoque de uma empresa de locação de equipamentos de TI usando PHP e MySQL.</p>
+        <p class="detalhes" id="formacoes_descricao" title="planilha:Formações/alias/descricao;arquivo:estrutura/formacoes/alias">Desenvolvimento de um sistema de controle de estoque de uma empresa de locação de equipamentos de TI usando PHP e MySQL.</p>
           
     </div> 
      
-    <div class="item">
+    <div class="item alias"  title="csap">
         <div class="title-date">
-            <div><h3 class="item" ><b>Workshop de Segurança Cibernética e Proteção de Dados</b> <span class='where'>CSAP</span></h3></div><div><span style="margin: 0;">2017</span></div>
+            <div><h3 class="item" ><b  class="detalhes" id="formacoes_complementares_curso" title="planilha:Formações/alias/curso;arquivo:estrutura/formacoes_complementares/alias" >Workshop de Segurança Cibernética e Proteção de Dados</b> <span class='where detalhes' id="formacoes_complementares_instituicao" title="planilha:Formações/alias/instituicao;arquivo:estrutura/formacoes_complementares/alias">CSAP</span></h3></div><div><span style="margin: 0;" id="formacoes_complementares_duracao" title="planilha:Formações/alias/duracao;arquivo:estrutura/formacoes_complementares/alias" class="detalhes">2017</span></div>
         </div> 
-        <p>Este workshop oferece conhecimento prático sobre ameaças de cibersegurança, regulamentações de proteção de dados, métodos de criptografia e melhores práticas para proteger ativos digitais.</p>
+        <p class="detalhes" id="formacoes_descricao" title="planilha:Formações/alias/descricao;arquivo:estrutura/formacoes/alias">Este workshop oferece conhecimento prático sobre ameaças de cibersegurança, regulamentações de proteção de dados, métodos de criptografia e melhores práticas para proteger ativos digitais.</p>
           
     </div> 
       
 </div>
         
-            <div class="section" name="habilidades_tecnicas">
-    <h2>HABILIDADES TÉCNICAS</h2> 
+            <div class="section alias" name="habilidades_tecnicas">
+    <h2 class="detalhes section_title" id="habilidades" title="Movimente a seção alterando sua ordem em &#39;modelo.txt&#39; | Altere seu nome localizando renomear e indicando com a sintaxe &#39;nome : novonome&#39;">HABILIDADES TÉCNICAS</h2> 
     <ul class="no-bullet">
          
+         <div class="alias"  title="">
             
+            </div>
          
+         <div class="alias"  title="">
             
+            </div>
          
-            
-         
+         <div class="alias"  title="">
             
                 <li> 
-                    <p class='p'><span class="b">Linguagens: </span>JavaScript.</p> 
+                    <p class='p'><span class='b detalhes' id="habilidades_tecnicas_classe" title="planilha:Habilidades/grupo/classe;arquivo:estrutura/habilidades_tecnicas/grupo">Linguagens: </span><span class='detalhes' id="habilidades_tecnicas_nome" title="planilha:Habilidades/grupo/nome;arquivo:estrutura/habilidades_tecnicas/grupo a">JavaScript</span>.</p> 
                 </li>
             
-         
-            
+            </div>
           
     </ul>
 </div>
         
-            <div class="section" name="habilidades_comportamentais">
-    <h2>HABILIDADES COMPORTAMENTAIS</h2>  
+            <div class="section alias" name="habilidades_comportamentais">
+    <h2 class="detalhes section_title" id="habilidades" title="Movimente a seção alterando sua ordem em &#39;modelo.txt&#39; | Altere seu nome localizando renomear e indicando com a sintaxe &#39;nome : novonome&#39;">HABILIDADES COMPORTAMENTAIS</h2>  
     <ul class="no-bullet">
          
+         <div class="alias"  title="">
             
                 <li> 
-                    <span class='p'>Adaptabilidade / Orientação para Detalhes / Solução de Problemas / Trabalho em Equipe / Gerenciamento de Tempo / Aprendizado Contínuo.</span class='p'>
+                    <span class='p detalhes' id="habilidades_comportamentais_nome" title="planilha:Habilidades/grupo/nome;arquivo:estrutura/habilidades_comportamentais/grupo b">Adaptabilidade.</span class='p'>
                 </li>
             
+            </div>
          
+         <div class="alias"  title="">
             
+            </div>
          
+         <div class="alias"  title="">
             
-         
-            
-         
-            
+            </div>
           
     </ul>
 </div> 
         
-            <div class="section" name="idiomas">
-    <h2>IDIOMAS</h2>  
+            <div class="section alias" name="idiomas">
+    <h2 class="detalhes section_title" id="habilidades" title="Movimente a seção alterando sua ordem em &#39;modelo.txt&#39; | Altere seu nome localizando renomear e indicando com a sintaxe &#39;nome : novonome&#39;">IDIOMAS</h2>  
     <div class='d-flex'>
          
+         <div class="alias"  title="">
             
+        </div>
          
+         <div class="alias"  title="">
             
                     <div class="flex-items">
-                        <b>Espanhol :</b>
-                        <span class='p'>Básico</span class='p'> 
+                        <b class='p detalhes' id="idiomas_classe" title="planilha:Habilidades/grupo/classe;arquivo:estrutura/idiomas/grupo">Inglês :</b>
+                        <span class='p detalhes' id="idiomas_nome" title="planilha:Habilidades/grupo/nome;arquivo:estrutura/idiomas/grupo c">Avançado</span class='p'> 
                     </div>
                  
             
+        </div>
          
+         <div class="alias"  title="">
             
-                    <div class="flex-items">
-                        <b>Inglês :</b>
-                        <span class='p'>Avançado</span class='p'> 
-                    </div>
-                 
-            
-         
-            
-         
-            
-                    <div class="flex-items">
-                        <b>Português :</b>
-                        <span class='p'>Fluente</span class='p'> 
-                    </div>
-                 
-            
+        </div>
           
     </div>
 </div> 
         
-            <div class="section" name="outros">
-    <h2>OUTRAS INFORMAÇÕES</h2>
+            <div class="section alias" name="outros">
+    <h2 class="detalhes  section_title" id="outros" title="Movimente a seção alterando sua ordem em &#39;modelo.txt&#39; | Altere seu nome localizando renomear e indicando com a sintaxe &#39;nome : novonome&#39;">outros</h2>
      
-    <div class="item">
+    <div class="item alias" title="vol">
         <div style="display: flex; justify-content: space-between;">
-             <div><span>Voluntariado 4h por dia na APAE de minha cidade</span> </div>  
-        <div><span style="margin: 0;">2014</span></div></div>
+             <div><span class='p detalhes' id="outros_descricao" title="planilha:Outros/alias/descricao;arquivo:estrutura/outros/alias">Voluntariado 4h por dia na APAE de minha cidade</span> </div> 
+        <div><span class='p detalhes' id="outros_duracao" title="planilha:Outros/alias/duracao;arquivo:estrutura/outros/alias">2014</span></div></div>
         
      </div> 
      

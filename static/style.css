@@ -9,7 +9,8 @@
     --primary-button-color-hover: #427ff1; 
 }
 
-
+.d-none{display: none}
+.modal_div{margin-bottom: 0.5em}
 body {
     font-family: Arial, sans-serif;
     margin: 0;

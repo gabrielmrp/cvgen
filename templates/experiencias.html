@@ -1,21 +1,21 @@
-<div class="section" name="experiencias">
-    <h2>{{sessoes.experiencias}}</h2>
+<div class="section alias" name="experiencias">
+    <h2 class="detalhes  section_title" id="experiencias" title="{{titulos.sessoes.experiencias}}">{{sessoes.experiencias}}</h2>
     {% for experiencia in experiencias %} 
-    <div class="item">
+    <div class="item alias" title="{{experiencia.alias}}">
         <div class="title-date">
-             <div><h3 class="item" ><b>{{ experiencia.cargo }}</b> <span class='where'>{{ experiencia.empresa }}: </span></h3></div>  
+             <div><h3 class="item" ><b class="detalhes" id="experiencia_cargo" title="{{ titulos.experiencia_cargo}}" >{{ experiencia.cargo }}</b> <span class='where detalhes' id="experiencia_empresa" title="{{ titulos.experiencia_empresa}}">{{ experiencia.empresa }}: </span></h3></div>  
         <!--<span class="item"><i></i></span>  --> 
-        <div><span style="margin: 0;">{{ experiencia.duracao }}</span></div></div>
-        <p>{{ experiencia.descricao }}</p>
+        <div><span style="margin: 0;" id="experiencia_duracao" title="{{ titulos.experiencia_duracao }}" class="detalhes">{{ experiencia.duracao }}</span></div></div>
+        <p class="detalhes" id="experiencia_descricao" title="{{ titulos.experiencia_descricao }}">{{ experiencia.descricao }}</p>
             {% if experiencia.tem_detalhe %}
-            <ul>
-                {% if experiencia.detalhe1 != '' %} <li><span>{{ experiencia.detalhe1 }}</span></li>{% endif %} 
-                {% if experiencia.detalhe2 != '' %} <li><span>{{ experiencia.detalhe2 }}</span></li>{% endif %} 
-                {% if experiencia.detalhe3 != '' %} <li><span>{{ experiencia.detalhe3 }}</span></li>{% endif %} 
-                {% if experiencia.detalhe4 != '' %} <li><span>{{ experiencia.detalhe4 }}</span></li>{% endif %} 
-                {% if experiencia.detalhe5 != '' %} <li><span>{{ experiencia.detalhe5 }}</span></li>{% endif %} 
+            <ul> 
+                {% if experiencia.detalhe1 != '' %} <li><span id="experiencia_detalhe1" title="{{ titulos.experiencia_detalhe1}}" class="detalhes">{{ experiencia.detalhe1 }}</span></li>{% endif %} 
+                {% if experiencia.detalhe2 != '' %} <li><span id="experiencia_detalhe2" title="{{ titulos.experiencia_detalhe2}}" class="detalhes">{{ experiencia.detalhe2 }}</span></li>{% endif %} 
+                {% if experiencia.detalhe3 != '' %} <li><span id="experiencia_detalhe3" title="{{ titulos.experiencia_detalhe3}}" class="detalhes">{{ experiencia.detalhe3 }}</span></li>{% endif %} 
+                {% if experiencia.detalhe4 != '' %} <li><span id="experiencia_detalhe4" title="{{ titulos.experiencia_detalhe4}}" class="detalhes">{{ experiencia.detalhe4 }}</span></li>{% endif %} 
+                {% if experiencia.detalhe5 != '' %} <li><span id="experiencia_detalhe5" title="{{ titulos.experiencia_detalhe5}}" class="detalhes">{{ experiencia.detalhe5 }}</span></li>{% endif %} 
             </ul>
             {% endif %}  
      </div> 
     {% endfor %} 
-</div>
+</div> 

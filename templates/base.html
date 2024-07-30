@@ -92,7 +92,10 @@
 
     }); 
         </script> 
-        <main> 
+        <main>
+            <div class="d-none" id="planilha">{{ planilha }}</div>
+            <div class="d-none" id="modelo">{{ modelo }}</div>
+             <div class="d-none" id="idioma">{{ idioma }}</div>
             {% block content %} 
             {% endblock %}   
         </main>

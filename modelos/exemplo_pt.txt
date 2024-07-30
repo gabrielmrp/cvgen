@@ -25,8 +25,8 @@ estrutura
 		tit
 	resumo
 		main
-	formacao
-		grad
+	formacoes
+		grad ...
 	experiencias
 		nov ...
 		luna
@@ -35,7 +35,7 @@ estrutura
 	experiencias_adicionais  
 		yop
 		pipa 
-	formacao_complementar
+	formacoes_complementares
 		mic 
 		fer
 		csap
@@ -43,8 +43,10 @@ estrutura
 	habilidades_tecnicas 
 		a
 	habilidades_comportamentais
-		*
+		b
 	idiomas
-		* 
+		c 
 	outros
 		vol
+renomear
+	outros:outros

@@ -1,10 +1,10 @@
-<div class="section" name="outros">
-    <h2>{{sessoes.outros}}</h2>
+<div class="section alias" name="outros">
+    <h2 class="detalhes  section_title" id="outros" title="{{titulos.sessoes.outros}}">{{sessoes.outros}}</h2>
     {% for outro in outros %} 
-    <div class="item">
+    <div class="item alias" title="{{outro.alias}}">
         <div style="display: flex; justify-content: space-between;">
-             <div><span>{{ outro.descricao }}</span> </div>  
-        <div><span style="margin: 0;">{{ outro.duracao }}</span></div></div>
+             <div><span class='p detalhes' id="outros_descricao" title="{{titulos.outros_descricao }}">{{ outro.descricao }}</span> </div> 
+        <div><span class='p detalhes' id="outros_duracao" title="{{titulos.outros_duracao }}">{{ outro.duracao }}</span></div></div>
         
      </div> 
     {% endfor %} 

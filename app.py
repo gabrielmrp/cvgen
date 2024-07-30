@@ -227,13 +227,13 @@ def process_resumo(df,alias_selecionados_ordenados):
     if df.empty:
         return None   
 
-    return df.head(1)['texto'].values[0]
+    return df.head(1)[['alias','texto']].to_dict('records')[0] 
  
 def process_experiencias(df,alias_selecionados_ordenados,secundario=False):
     df['tipo'] = 'principal'
     if secundario:
         df['tipo'] = 'complementar' 
-    return process_historico(df,alias_selecionados_ordenados,['empresa', 'cargo', 'duracao','tipo', 'descricao', 'detalhe1','detalhe2','detalhe3','detalhe4','detalhe5','tem_detalhe'])
+    return process_historico(df,alias_selecionados_ordenados,['alias','empresa', 'cargo', 'duracao','tipo', 'descricao', 'detalhe1','detalhe2','detalhe3','detalhe4','detalhe5','tem_detalhe'])
 
 def process_experiencias_adicionais(df,alias_selecionados_ordenados):
     return process_experiencias(df,alias_selecionados_ordenados,True)
@@ -242,7 +242,7 @@ def process_formacoes(df,alias_selecionados_ordenados,secundario=False):
     df['tipo'] = 'principal'
     if secundario:
         df['tipo'] = 'secundária' 
-    return process_historico(df,alias_selecionados_ordenados,['curso', 'instituicao', 'duracao','tipo', 'descricao',  'detalhe1','detalhe2','detalhe3','detalhe4','detalhe5','tem_detalhe'])
+    return process_historico(df,alias_selecionados_ordenados,['alias','curso', 'instituicao', 'duracao','tipo', 'descricao',  'detalhe1','detalhe2','detalhe3','detalhe4','detalhe5','tem_detalhe'])
 
 def process_formacoes_complementares(df,alias_selecionados_ordenados): 
     return process_formacoes(df,alias_selecionados_ordenados,True)
@@ -269,13 +269,13 @@ def process_habilidades(df_habilidades_simples, df_classes, idioma, grupos_selec
 
     df_habilidades_concatenadas['nome'] = df_habilidades_concatenadas[f'nome_{idioma}']
     df_habilidades_concatenadas['classe'] = df_habilidades_concatenadas[f'classe_{idioma}']
- 
-    return df_habilidades_concatenadas.groupby(['classe', 'tipo'])['nome'].apply(' / '.join).reset_index().to_dict('records')
+    #print(dw)
+    return df_habilidades_concatenadas.groupby(['classe', 'tipo','grupo'])['nome'].apply(' / '.join).reset_index().to_dict('records')
 
 def process_sessoes(df, idioma,renomear=None):
  
     if renomear: 
-        renomear_partes = renomear.split(': ')
+        renomear_partes = renomear.split(':')
         df.loc[df.alias== renomear_partes[0],[f'nome_{idioma}']]=renomear_partes[1]
 
     return df.set_index(df.columns[1]).to_dict()[f'nome_{idioma}']
@@ -301,9 +301,13 @@ def read_from_user_data_source(data_source, sheet_name, idioma, colunas):
 
 def get_user_data(idioma,model):
 
+    usuario = mostra_usuario()
 
-    data_source = 'dados_exemplo' if mostra_usuario()=='exemplo' else 'dados'
-     
+    if usuario=='Nenhum':
+        return None
+    else: 
+        data_source = 'dados_exemplo' if usuario =='exemplo' else 'dados'
+      
     df_titulos = read_from_user_data_source(data_source, 'Títulos', idioma, ['valor'])
     df_cabecalho = read_from_user_data_source(data_source, 'Cabeçalho', idioma, ['rotulo', 'valor'])  
     df_resumo = read_from_user_data_source(data_source, 'Resumo', idioma, ['texto'])
@@ -323,17 +327,16 @@ def get_user_data(idioma,model):
 
     experiencias = process_experiencias(df_experiencias,get_model_data(model,'experiencias'))
     experiencias_adicionais = process_experiencias_adicionais(df_experiencias,get_model_data(model,'experiencias_adicionais'))  
-    outros = process_historico(df_outros,get_model_data(model,'outros'),['duracao', 'descricao']) 
-    formacoes = process_formacoes(df_formacoes,get_model_data(model,'formacao'))
-    formacoes_complementares = process_formacoes_complementares(df_formacoes,get_model_data(model,'formacao_complementar')) 
+    outros = process_historico(df_outros,get_model_data(model,'outros'),['duracao', 'descricao','alias']) 
+    formacoes = process_formacoes(df_formacoes,get_model_data(model,'formacoes'))
+    formacoes_complementares = process_formacoes_complementares(df_formacoes,get_model_data(model,'formacoes_complementares')) 
     habilidades = process_habilidades(df_habilidades_simples, df_classes, idioma,
             {
                 'técnica' : get_model_data(model,'habilidades_tecnicas'),
                 'comportamental' : get_model_data(model,'habilidades_comportamentais'),
                 'idioma' : get_model_data(model,'idiomas'),
             }
-        ) 
-
+        )  
     return cabecalho, resumo, experiencias,experiencias_adicionais, formacoes,formacoes_complementares, outros, habilidades, sessoes
 
 
@@ -350,6 +353,7 @@ def planilha(usuario):
     # Executa a GUI PyQt em um thread separado para abrir um arquivo
     #thread = threading.Thread(target=run_pyqt_app, args=(False,))
     #thread.start()
+    define_usuario(usuario)
     base_folder = os.getenv('BASE_FOLDER')
     data_source = 'dados_exemplo' if usuario.lower() == 'exemplo' else 'dados'
     file_path = os.path.join(base_folder, data_source + '.xlsx').replace('\\\\', '\\')
@@ -388,13 +392,21 @@ def define_usuario(usuario):
 
 def mostra_usuario():
     # Recupera o valor de 'usuario' da sessão
-    usuario = session.get('usuario', 'Nenhum usuário definido')
-    return  usuario.lower()
+    usuario = session.get('usuario', 'Nenhum')
+     
+    return usuario.lower()
+
+
+@app.route('/logout')
+def logout():
+    session.clear()  # Limpa todos os dados da sessão
+    return redirect(url_for('usuarios'))
+
 
 @app.route('/versoes',methods=['GET'])
 def versoes(): 
   
-    # Lista os arquivos no diretório x
+    #  Lista os arquivos no diretório
     arquivos = os.listdir("modelos")   
    
 
@@ -404,13 +416,27 @@ def versoes():
         arquivos =  [arq for arq in arquivos if arq.startswith('exemplo') == False]
         
     arquivos = [arq[:-4] for arq in arquivos if arq[-4:]=='.txt']
-  
+     
     df_arquivos = pd.DataFrame([[arq,arq.split('_')[0],arq.split('_')[1]] for arq in arquivos],columns=['modelo_completo','modelo','idioma'])
 
-    if df_arquivos.empty and session.get('usuario').lower() != 'exemplo':
-        return render_template('mensagens.html',
-            message='copie manualmente o arquivo na pasta modelos "exemplo_pt.txt" para o arquivo "cargo_pt.txt" e realize as alterações devidas') 
+    if df_arquivos.empty and session.get('usuario').lower() != 'exemplo': 
 
+        # Copiando o arquivo
+        msg_manual = 'copie manualmente o arquivo na pasta modelos "exemplo_pt.txt" para o arquivo "cargo_pt.txt", clique em atualizar'
+
+        try:
+            shutil.copy('modelos/exemplo_pt.txt', 'modelos/cargo_pt.txt')
+            msg = "O arquivo com o modelo de estrutura baseado em um cargo foi criado em: modelos/cargo_pt.txt, faça as modificações pertinentes"
+        except FileNotFoundError:
+             msg = f"Erro: O arquivo de origem '{caminho_origem}' não foi encontrado. Reinstale a aplicação"
+        except PermissionError:
+             msg = f"Erro: Permissão negada ao tentar copiar para '{caminho_destino}'. Verifique se o arquivo exemplo_pt.txt está fechado"
+        except Exception as e:
+             msg = f'Erro inesperado: {msg_manual} {e}'
+ 
+        return render_template('mensagens.html',message=msg) 
+
+  
     dict_arquivos = df_arquivos.to_dict('records')
 
     return render_template('versoes.html',
@@ -427,12 +453,34 @@ def home(cv_name):
  
     model_data = transform_idented_txt_to_json(cv_name)
 
-    with open('modelos/'+cv_name+'.json', 'r') as f:
+    with open('modelos/'+cv_name+'.json', 'r', encoding='utf-8') as f:
         model = json.load(f) 
 
+    with open('titulos.json', 'r', encoding='utf-8') as f:
+        titulos = json.load(f)
+
+    if not os.path.exists('dados.xlsx'): 
+        try: 
+            caminho_origem = 'dados_exemplo.xlsx'
+            caminho_destino = 'dados.xlsx'
+            msg_manual = f"copie manualmente a planilha '{caminho_origem}' para a pasta '{caminho_destino}' e altere com seus dados'"
+
+            shutil.copy(caminho_origem, caminho_destino)
+            msg = "O arquivo com o os detalhes do currículo foi criado em: dados.xlsx, faça as modificações pertinentes e atualize a página"
+        except FileNotFoundError:
+             msg = f"Erro: O arquivo de origem '{caminho_origem}' não foi encontrado. Reinstale a aplicação"
+        except PermissionError:
+             msg = f"Erro: Permissão negada ao tentar copiar para '{caminho_destino}'. Verifique se o arquivo '{caminho_origem}' está fechado"
+        except Exception as e:
+             msg = f'Erro inesperado: {msg_manual} {e}'
+ 
+        return render_template('mensagens.html',message=msg)  
 
     user_data = get_user_data(model_data['idioma'],model)
 
+    usuario = mostra_usuario() 
+    if usuario =='nenhum': 
+        return redirect(url_for('usuarios'))
 
     if os.getenv("NOME") is not None and mostra_usuario()!='exemplo':
         file_name = create_filename_hashed_suffix(os.getenv("NOME").replace(' ','_'), model_data['arquivo']) 
@@ -444,10 +492,12 @@ def home(cv_name):
     else: 
         cabecalho, resumo, experiencias,experiencias_adicionais, formacoes,formacoes_complementares, outros, habilidades, sessoes  = user_data
     
+    sessoes  = { key : sessoes[key]  for key in model_data['estrutura'].keys() if key in sessoes.keys() }
+    #print(dw)
     html_content =  render_template('curriculo.html', 
         user_data=cabecalho,  
         resumo=resumo,
-        sessoes={ key : sessoes[key]  for key in model_data['estrutura'].keys() if key in sessoes.keys() },
+        sessoes=sessoes,
         experiencias=experiencias, 
         formacoes=formacoes,
         habilidades=habilidades,
@@ -458,7 +508,11 @@ def home(cv_name):
         file_name= file_name,
         download_path=model_data['pasta_downloads'],
         destination_path=model_data['pasta_curriculos'],
-        usuario=mostra_usuario(),
+        usuario=usuario,
+        planilha= 'dados_exemplo.xlsx' if usuario == 'exemplo' else 'dados.xlsx',
+        modelo=cv_name,
+        titulos=titulos,
+        idioma=model_data['idioma'],
         html_titulo="GENCV - CV"
         )
 
@@ -468,6 +522,7 @@ def home(cv_name):
         file.write(html_content)
  
     return html_content
+    
     
 
 if __name__ == '__main__':  

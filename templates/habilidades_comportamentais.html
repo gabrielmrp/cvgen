@@ -1,12 +1,14 @@
-<div class="section" name="habilidades_comportamentais">
-    <h2>{{sessoes.habilidades_comportamentais}}</h2>  
+<div class="section alias" name="habilidades_comportamentais">
+    <h2 class="detalhes section_title" id="habilidades" title="{{titulos.sessoes.habilidades}}">{{sessoes.habilidades_comportamentais}}</h2>  
     <ul class="no-bullet">
          {% for habilidade in habilidades  %}
+         <div class="alias"  title="{{habilidade.alias}}">
             {% if habilidade.tipo == 'comportamental' %}
                 <li> 
-                    <span class='p'>{{habilidade.nome}}.</span class='p'>
+                    <span class='p detalhes' id="habilidades_comportamentais_nome" title="{{titulos.habilidades_comportamentais_nome}} {{habilidade.grupo}}">{{habilidade.nome}}.</span class='p'>
                 </li>
             {% endif %}
+            </div>
          {% endfor %} 
     </ul>
 </div> 

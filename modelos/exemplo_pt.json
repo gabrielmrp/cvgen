@@ -23,8 +23,8 @@
         "resumo": [
             "main"
         ],
-        "formacao": [
-            "grad"
+        "formacoes": [
+            "grad ..."
         ],
         "experiencias": [
             "nov ...",
@@ -36,7 +36,7 @@
             "yop",
             "pipa"
         ],
-        "formacao_complementar": [
+        "formacoes_complementares": [
             "mic",
             "fer",
             "csap"
@@ -45,13 +45,14 @@
             "a"
         ],
         "habilidades_comportamentais": [
-            "*"
+            "b"
         ],
         "idiomas": [
-            "*"
+            "c"
         ],
         "outros": [
             "vol"
         ]
-    }
+    },
+    "renomear": "outros:outros"
 }

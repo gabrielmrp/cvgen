@@ -1,9 +1,57 @@
+<style type="text/css">
+    /* Estilos para o modal */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgb(0,0,0); 
+            background-color: rgba(0,0,0,0.4); 
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto; 
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+</style>
+<div class="alias"  title="">
 <div class="header">
     {% if 'nome' in user_data and 'valor' in user_data.nome %}
-        <h1>{{ user_data.nome.valor }}</h1>
+        <h1 id='nome' title="{{titulos.nome.replace('alias','nome')}}" class="detalhes">{{ user_data.nome.valor }}</h1>
+        <!-- O Modal
+    <div id="myModal" class="modal">
+        <div class="modal-content"> 
+            <p class="close">&times;</p>
+            <h2>Localização do conteúdo na planilha:</h2>
+            <p id="modalText1"></p>  
+            <p id="modalText2"></p>
+        </div>
+    </div> -->
     {% endif %}
     {% if 'titulo' in user_data and 'valor' in user_data.titulo %}
-        <h2>{{ user_data.titulo.valor }}</h2>
+        <h2 id='titulo' title="{{titulos.titulo.replace('alias','titulo')}}"  class="detalhes">{{ user_data.titulo.valor }}</h2>
     {% endif %}
 </div>
 
@@ -11,30 +59,34 @@
     <div class="" style="display: flex; justify-content: space-between;">
         <div>
             {% if 'cidade' in user_data and 'uf' in user_data and 'valor' in user_data.uf %}
-                <h3>{{ user_data.cidade.rotulo }}: {{ user_data.cidade.valor }}, {{ user_data.uf.valor }}</h3>
+                <h3><span id='cidade' title="{{titulos.cidade.replace('alias','cidade')}}"  class="detalhes">{{ user_data.cidade.rotulo }}: {{ user_data.cidade.valor }}, </span><span id='uf' title="{{titulos.uf.replace('alias','uf')}}"  class="detalhes">{{ user_data.uf.valor }}</h3>
             {% endif %}
         </div>
         <div> 
-         <h3>{% if 'telefone' in user_data %}{{ user_data.telefone.rotulo }}: {{ user_data.telefone.valor }}
-         {% endif %}, {% if 'email' in user_data  %}{{ user_data.email.rotulo }}: {{ user_data.email.valor }}{% endif %}</h3> 
+         <h3>
+         <span id='telefone' title="{{titulos.telefone.replace('alias','telefone')}}"  class="detalhes">{% if 'telefone' in user_data %}{{ user_data.telefone.rotulo }}: {{ user_data.telefone.valor }}
+         </span>
+        <span id='email' title="{{titulos.email.replace('alias','email')}}"  class="detalhes">
+         {% endif %}, {% if 'email' in user_data  %}{{ user_data.email.rotulo }}: {{ user_data.email.valor }}{% endif %}
+        </span></h3> 
         </div>  
     </div>
     <div class="" style="display: flex; justify-content: space-between;">
         <div>
             {% if 'linkedin' in user_data %}
-                <h3>{{ user_data.linkedin.rotulo }}: <a href="{{ user_data.linkedin.valor }}" target="_blank">{{ user_data.linkedin.valor }}</a></h3>
+                <h3  id='linkedin' title="{{titulos.linkedin.replace('alias','linkedin')}}"  class="detalhes" >{{ user_data.linkedin.rotulo }}: <a href="{{ user_data.linkedin.valor }}" target="_blank">{{ user_data.linkedin.valor }}</a></h3>
             {% endif %}
         </div>
         <div>
             {% if 'url' in user_data %}
-                <h3>{{ user_data.url.rotulo }}: <a href="{{ user_data.url.valor }}" target="_blank">{{ user_data.url.valor }}</a></h3>
+                <h3  id='url' title="{{titulos.url.replace('alias','url')}}"  class="detalhes" >{{ user_data.url.rotulo }}: <a href="{{ user_data.url.valor }}" target="_blank">{{ user_data.url.valor }}</a></h3>
             {% endif %}
         </div>
     </div>
 </div>
+ 
 
-    
-
-<div class="section resumo"> 
-    <h2 class='resumo'>{{ resumo  }}</h2>
+<div class="section resumo alias" title="{{resumo.alias}}"> 
+    <h2 id='resumo'  title="{{titulos.resumo}}" class="resumo detalhes">{{ resumo.texto }}</h2>
+</div>
 </div>

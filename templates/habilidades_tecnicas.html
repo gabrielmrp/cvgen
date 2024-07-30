@@ -1,12 +1,14 @@
-<div class="section" name="habilidades_tecnicas">
-    <h2>{{sessoes.habilidades_tecnicas}}</h2> 
+<div class="section alias" name="habilidades_tecnicas">
+    <h2 class="detalhes section_title" id="habilidades" title="{{titulos.sessoes.habilidades}}">{{sessoes.habilidades_tecnicas}}</h2> 
     <ul class="no-bullet">
          {% for habilidade in habilidades  %}
+         <div class="alias"  title="{{habilidade.alias}}">
             {% if habilidade.tipo == 'técnica' %}
                 <li> 
-                    <p class='p'><span class="b">{{habilidade.classe}}: </span>{{habilidade.nome}}.</p> 
+                    <p class='p'><span class='b detalhes' id="habilidades_tecnicas_classe" title="{{titulos.habilidades_tecnicas_classe}}">{{habilidade.classe}}: </span><span class='detalhes' id="habilidades_tecnicas_nome" title="{{titulos.habilidades_tecnicas_nome}} {{habilidade.grupo}}">{{habilidade.nome}}</span>.</p> 
                 </li>
             {% endif %}
+            </div>
          {% endfor %} 
     </ul>
 </div>
